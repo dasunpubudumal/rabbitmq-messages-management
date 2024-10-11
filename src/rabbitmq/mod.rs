@@ -1,2 +1,1 @@
-use rabbitmq_messages_management::constants;
-mod queues;
+pub mod queues;

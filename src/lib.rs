@@ -1,6 +1,5 @@
 extern crate dotenv_codegen;
 
-pub mod constants;
 use base64::prelude::*;
 
 use isahc::{prelude::*, Request};
@@ -8,7 +7,7 @@ use isahc::{prelude::*, Request};
 use serde::Deserialize;
 use std::collections::HashMap;
 
-use constants::{RABBITMQ_MANAGEMENT_PASSWORD, RABBITMQ_MANAGEMENT_USERNAME};
+pub mod constants;
 
 /// Sends an HTTP GET request to
 #[derive(PartialEq)]
@@ -45,6 +44,7 @@ pub enum Authority {
 /// ```rust
 /// use serde::Deserialize;
 /// use std::collections::HashMap;
+/// use rabbitmq_messages_management::send_get;
 ///
 /// #[derive(Deserialize, Debug)]
 /// struct Ip {
@@ -108,7 +108,7 @@ where
 ///
 /// ```
 /// use std::collections::HashMap;
-///
+/// use rabbitmq_messages_management::prepare_authorization_headers;
 /// let headers = prepare_authorization_headers();
 /// assert!(headers.contains_key("Authorization"));
 /// ```
@@ -119,9 +119,9 @@ pub fn prepare_authorization_headers() -> HashMap<String, String> {
             "Basic {}",
             BASE64_STANDARD.encode(format!(
                 "{}:{}",
-                dotenv::var(RABBITMQ_MANAGEMENT_USERNAME)
+                dotenv::var(constants::RABBITMQ_MANAGEMENT_USERNAME)
                     .expect("RABBITMQ_MANAGEMENT_USERNAME not set"),
-                dotenv::var(RABBITMQ_MANAGEMENT_PASSWORD)
+                dotenv::var(constants::RABBITMQ_MANAGEMENT_PASSWORD)
                     .expect("RABBITMQ_MANAGEMENT_PASSWORD not set")
             ))
         ),
@@ -142,6 +142,7 @@ pub fn prepare_authorization_headers() -> HashMap<String, String> {
 /// # Example
 ///
 /// ```rust
+/// use rabbitmq_messages_management::prepare_url;
 /// let root_uri = "http://example.com";
 /// let path = "api/v1/resource";
 /// let full_url = prepare_url(root_uri, path).unwrap();

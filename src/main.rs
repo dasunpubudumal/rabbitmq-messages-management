@@ -7,6 +7,8 @@ use std::collections::HashMap;
 use rabbitmq_messages_management::send_get;
 use serde::{Deserialize, Serialize};
 
+mod constants;
+
 mod rabbitmq;
 
 #[derive(Serialize, Deserialize, Debug)]

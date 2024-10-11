@@ -1,4 +1,4 @@
-use crate::rabbitmq::constants::RABBITMQ_MANAGEMENT_ROOT;
+use crate::constants::RABBITMQ_MANAGEMENT_ROOT;
 use rabbitmq_messages_management::{prepare_authorization_headers, send_get};
 use serde::{Deserialize, Serialize};
 
@@ -112,6 +112,8 @@ pub(crate) struct ReductionsDetails {
 /// ```rust
 /// #[tokio::main]
 /// async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+///     use rabbitmq_messages_management::rabbitmq::queues::get_queue_for_vhost;
+///     use rabbitmq_messages_management::rabbitmq::queues::get_queue_for_vhost;
 ///     let vhost = "my_vhost";
 ///     let queue_name = "my_queue";
 ///     let queues = get_queue_for_vhost(vhost, queue_name).await.unwrap();
@@ -119,7 +121,7 @@ pub(crate) struct ReductionsDetails {
 ///     Ok(())
 /// }
 /// ```
-async fn get_queue_for_vhost(vhost: &str, queue_name: &str) -> Result<Vec<Queue>, ()> {
+pub async fn get_queue_for_vhost(vhost: &str, queue_name: &str) -> Result<Vec<Queue>, ()> {
     let queues: Vec<Queue> = send_get(
         &dotenv::var(RABBITMQ_MANAGEMENT_ROOT).expect("RABBITMQ_MANAGEMENT_ROOT not set"),
         Some(&prepare_authorization_headers()),
