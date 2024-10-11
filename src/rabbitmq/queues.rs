@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 
 // Represents a RabbitMQ queue.
 #[derive(Serialize, Deserialize, Debug)]
-#[serde(deny_unknown_fields)]
+#[serde(crate = "rocket::serde")]
 pub(crate) struct Queue {
     /// Arguments for the queue.
     arguments: Arguments,
@@ -13,7 +13,7 @@ pub(crate) struct Queue {
     /// Status of the backing queue.
     backing_queue_status: BackingQueueStatus,
     /// Capacity of the consumer.
-    consumer_capacity: u64,
+    consumer_capacity: f64,
     /// Utilization of the consumer.
     consumer_utilisation: f64,
     /// Number of consumers.
@@ -95,6 +95,7 @@ pub(crate) struct Queue {
 
 /// Represents the arguments for a RabbitMQ queue.
 #[derive(Serialize, Deserialize, Debug)]
+#[serde(crate = "rocket::serde")]
 pub(crate) struct Arguments {}
 
 /// Represents the status of the backing queue.
@@ -130,10 +131,12 @@ pub(crate) struct BackingQueueStatus {
 
 /// Represents the effective policy definition for a RabbitMQ queue.
 #[derive(Serialize, Deserialize, Debug)]
+#[serde(crate = "rocket::serde")]
 pub(crate) struct EffectivePolicyDefinition {}
 
 /// Represents the garbage collection settings for a RabbitMQ queue.
 #[derive(Serialize, Deserialize, Debug)]
+#[serde(crate = "rocket::serde")]
 pub(crate) struct GarbageCollection {
     /// Full sweep after this many collections.
     fullsweep_after: u64,
@@ -149,6 +152,7 @@ pub(crate) struct GarbageCollection {
 
 /// Represents the details of messages in a RabbitMQ queue.
 #[derive(Serialize, Deserialize, Debug)]
+#[serde(crate = "rocket::serde")]
 pub(crate) struct MessageDetails {
     /// Rate of messages.
     rate: f64,
@@ -156,6 +160,7 @@ pub(crate) struct MessageDetails {
 
 /// Represents the details of reductions in a RabbitMQ queue.
 #[derive(Serialize, Deserialize, Debug)]
+#[serde(crate = "rocket::serde")]
 pub(crate) struct ReductionsDetails {
     /// Rate of reductions.
     rate: f64,

@@ -1,5 +1,5 @@
 use crate::rabbitmq::queues::{get_queue_for_vhost, Queue};
-use rocket::serde::{json::Json, Serialize};
+use rocket::serde::json::Json;
 
 #[get("/<vhost>")]
 pub async fn queues(vhost: &str) -> Json<Vec<Queue>> {
