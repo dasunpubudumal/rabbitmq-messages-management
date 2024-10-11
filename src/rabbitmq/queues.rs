@@ -91,6 +91,33 @@ pub(crate) struct ReductionsDetails {
     rate: f64,
 }
 
+/// Fetches the details of a specific queue for a given virtual host.
+///
+/// This function sends an HTTP GET request to the RabbitMQ management API to retrieve the details
+/// of a specific queue for the specified virtual host. The function uses the `send_get` function
+/// to perform the HTTP request and deserializes the response into a vector of `Queue` structs.
+///
+/// # Arguments
+///
+/// - `vhost`: A string slice that holds the name of the virtual host.
+/// - `queue_name`: A string slice that holds the name of the queue.
+///
+/// # Returns
+///
+/// - `Result<Vec<Queue>, ()>`: On success, returns a vector of `Queue` structs. On failure, returns an empty tuple `()`.
+///
+/// # Example
+///
+/// ```rust
+/// #[tokio::main]
+/// async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+///     let vhost = "my_vhost";
+///     let queue_name = "my_queue";
+///     let queues = get_queue_for_vhost(vhost, queue_name).await.unwrap();
+///     println!("{:?}", queues);
+///     Ok(())
+/// }
+/// ```
 async fn get_queue_for_vhost(vhost: &str, queue_name: &str) -> Result<Vec<Queue>, ()> {
     let queues: Vec<Queue> = send_get(
         dotenv!("RABBITMQ_MANAGEMENT_ROOT"),

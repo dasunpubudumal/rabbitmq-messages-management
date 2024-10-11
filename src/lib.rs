@@ -1,12 +1,14 @@
-#[macro_use]
 extern crate dotenv_codegen;
 
+mod constants;
 use base64::prelude::*;
 
 use isahc::{prelude::*, Request};
 
 use serde::Deserialize;
 use std::collections::HashMap;
+
+use constants::{RABBITMQ_MANAGEMENT_PASSWORD, RABBITMQ_MANAGEMENT_USERNAME};
 
 /// Sends an HTTP GET request to
 #[derive(PartialEq)]
@@ -117,8 +119,10 @@ pub fn prepare_authorization_headers() -> HashMap<String, String> {
             "Basic {}",
             BASE64_STANDARD.encode(format!(
                 "{}:{}",
-                dotenv!("RABBITMQ_MANAGEMENT_USERNAME"),
-                dotenv!("RABBITMQ_MANAGEMENT_PASSWORD")
+                dotenv::var(RABBITMQ_MANAGEMENT_USERNAME)
+                    .expect("RABBITMQ_MANAGEMENT_USERNAME not set"),
+                dotenv::var(RABBITMQ_MANAGEMENT_PASSWORD)
+                    .expect("RABBITMQ_MANAGEMENT_PASSWORD not set")
             ))
         ),
     )])
