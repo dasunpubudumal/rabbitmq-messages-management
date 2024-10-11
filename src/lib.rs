@@ -3,7 +3,7 @@ extern crate hyper;
 use serde::Deserialize;
 use tokio::net::TcpStream;
 use hyper_util::rt::TokioIo;
-use hyper::Request;
+use hyper::{Request};
 use hyper::client::conn::http1::Builder;
 use http_body_util::{BodyExt, Empty};
 use hyper::body::Bytes;
@@ -15,8 +15,45 @@ pub enum Authority {
   HTTPS
 }
 
-/// Sends HTTP GET request to authority://host:port/path
-/// Returns a response.
+/// Sends an HTTP GET request to the specified URI and deserializes the response body into the specified type.
+///
+/// # Type Parameters
+///
+/// - `T`: The type to deserialize the response body into. This type must implement the `Deserialize` trait for any lifetime.
+///
+/// # Arguments
+///
+/// - `uri`: A string slice that holds the URI to which the GET request will be sent.
+///
+/// # Returns
+///
+/// - `Result<T, ()>`: On success, returns the deserialized response body of type `T`. On failure, returns an empty tuple `()`.
+///
+/// # Errors
+///
+/// This function will return an error if:
+/// - The URI cannot be parsed.
+/// - The TCP connection cannot be established.
+/// - The HTTP request fails.
+/// - The response body cannot be deserialized into the specified type.
+///
+/// # Example
+///
+/// ```rust
+/// use serde::Deserialize;
+///
+/// #[derive(Deserialize, Debug)]
+/// struct Ip {
+///     ip: String,
+/// }
+///
+/// #[tokio::main]
+/// async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+///     let result: Ip = send_get("http://httpbin.org/ip").await.unwrap();
+///     println!("{:?}", result);
+///     Ok(())
+/// }
+/// ```
 pub async fn send_get<T>(uri: &str) -> Result<T, ()>
 where
     T: for<'de> Deserialize<'de>,
@@ -75,6 +112,29 @@ where
   let response_data: T = serde_json::from_slice(&response_body).unwrap();
 
   Ok(response_data)
+}
+
+// Constructs a full URL by concatenating the root URI and the path.
+///
+/// # Arguments
+///
+/// - `root_uri`: A string slice that holds the root URI.
+/// - `path`: A string slice that holds the path to be appended to the root URI.
+///
+/// # Returns
+///
+/// - `Result<String, ()>`: On success, returns the full URL as a `String`. On failure, returns an empty tuple `()`.
+///
+/// # Example
+///
+/// ```rust
+/// let root_uri = "http://example.com";
+/// let path = "api/v1/resource";
+/// let full_url = prepare_url(root_uri, path).unwrap();
+/// assert_eq!(full_url, "http://example.com/api/v1/resource");
+/// ```
+pub fn prepare_url(root_uri: &str, path: &str) -> Result<String, ()> {
+  Ok(format!("{}/{}", root_uri, path))
 }
 
 
