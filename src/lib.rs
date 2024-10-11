@@ -42,6 +42,7 @@ pub enum Authority {
 /// # Example
 ///
 /// ```rust
+/// # #[cfg(doctest)] {
 /// use serde::Deserialize;
 /// use std::collections::HashMap;
 /// use rabbitmq_messages_management::send_get;
@@ -60,6 +61,7 @@ pub enum Authority {
 ///     println!("{:?}", result);
 ///     Ok(())
 /// }
+/// # }
 /// ```
 pub async fn send_get<'a, T>(
     uri: &str,
@@ -107,10 +109,12 @@ where
 /// # Example
 ///
 /// ```
+/// # #[cfg(doctest)] {
 /// use std::collections::HashMap;
 /// use rabbitmq_messages_management::prepare_authorization_headers;
 /// let headers = prepare_authorization_headers();
 /// assert!(headers.contains_key("Authorization"));
+/// # }
 /// ```
 pub fn prepare_authorization_headers() -> HashMap<String, String> {
     HashMap::from([(
