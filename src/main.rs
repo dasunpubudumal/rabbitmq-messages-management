@@ -1,17 +1,14 @@
+use routes::queues::queues;
+
 #[macro_use]
 extern crate rocket;
 
 mod constants;
-mod routes;
-
 mod rabbitmq;
-
-#[get("/world")]
-fn world() -> &'static str {
-    "Hello, world!"
-}
+mod routes;
+mod transport;
 
 #[launch]
 fn rocket() -> _ {
-    rocket::build().mount("/hello", routes![world])
+    rocket::build().mount("/queues", routes![queues])
 }

@@ -1,5 +1,5 @@
 use crate::constants::RABBITMQ_MANAGEMENT_ROOT;
-use rabbitmq_messages_management::{prepare_authorization_headers, send_get};
+use rabbitmq_messages_management::{prepare_authorization_headers, prepare_url, send_get};
 use serde::{Deserialize, Serialize};
 
 // Represents a RabbitMQ queue.
@@ -164,13 +164,12 @@ pub(crate) struct ReductionsDetails {
 /// Fetches the details of a specific queue for a given virtual host.
 ///
 /// This function sends an HTTP GET request to the RabbitMQ management API to retrieve the details
-/// of a specific queue for the specified virtual host. The function uses the `send_get` function
+/// of queues in specified virtual host. The function uses the `send_get` function
 /// to perform the HTTP request and deserializes the response into a vector of `Queue` structs.
 ///
 /// # Arguments
 ///
 /// - `vhost`: A string slice that holds the name of the virtual host.
-/// - `queue_name`: A string slice that holds the name of the queue.
 ///
 /// # Returns
 ///
@@ -182,20 +181,17 @@ pub(crate) struct ReductionsDetails {
 /// #[tokio::main]
 /// async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
 ///     use rabbitmq_messages_management::rabbitmq::queues::get_queue_for_vhost;
-///     use rabbitmq_messages_management::rabbitmq::queues::get_queue_for_vhost;
 ///     let vhost = "my_vhost";
-///     let queue_name = "my_queue";
-///     let queues = get_queue_for_vhost(vhost, queue_name).await.unwrap();
+///     let queues = get_queue_for_vhost(vhost).await.unwrap();
 ///     println!("{:?}", queues);
 ///     Ok(())
 /// }
 /// ```
-pub async fn get_queue_for_vhost(vhost: &str, queue_name: &str) -> Result<Vec<Queue>, ()> {
-    let queues: Vec<Queue> = send_get(
-        &dotenv::var(RABBITMQ_MANAGEMENT_ROOT).expect("RABBITMQ_MANAGEMENT_ROOT not set"),
-        Some(&prepare_authorization_headers()),
-    )
-    .await
-    .unwrap();
+pub async fn get_queue_for_vhost(vhost: &str) -> Result<Vec<Queue>, ()> {
+    let root = &dotenv::var(RABBITMQ_MANAGEMENT_ROOT).expect("RABBITMQ_MANAGEMENT_ROOT not set");
+    let url = prepare_url(&root, &format!("api/queues/{}", vhost)).unwrap();
+    let queues: Vec<Queue> = send_get(&url, Some(&prepare_authorization_headers()))
+        .await
+        .unwrap();
     Ok(queues)
 }
