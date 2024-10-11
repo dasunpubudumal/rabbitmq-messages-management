@@ -1,21 +1,18 @@
-extern crate hyper;
+#[macro_use]
+extern crate dotenv_codegen;
 
-use hyper::header::HeaderName;
+use base64::prelude::*;
+
+use isahc::{prelude::*, Request};
+
 use serde::Deserialize;
-use tokio::net::TcpStream;
-use hyper_util::rt::TokioIo;
-use hyper::{header::HeaderValue, Request};
-use hyper::client::conn::http1::Builder;
-use http_body_util::{BodyExt, Empty};
-use hyper::body::Bytes;
 use std::collections::HashMap;
-use std::str::FromStr;
 
 /// Sends an HTTP GET request to
 #[derive(PartialEq)]
 pub enum Authority {
-  HTTP,
-  HTTPS
+    HTTP,
+    HTTPS,
 }
 
 /// Sends an HTTP GET request to the specified URI and deserializes the response body into the specified type.
@@ -62,74 +59,47 @@ pub enum Authority {
 ///     Ok(())
 /// }
 /// ```
-pub async fn send_get<'a, T>(uri: &str, headers: Option<&'a HashMap<String, String>>) -> Result<T, ()>
+pub async fn send_get<'a, T>(
+    uri: &str,
+    headers: Option<&'a HashMap<String, String>>,
+) -> Result<T, ()>
 where
     T: for<'de> Deserialize<'de>,
 {
+    let mut request_builder = Request::get(uri);
 
-  let url = uri.parse::<hyper::Uri>().unwrap();
-
-    // Get the host and the port
-  let host = url.host().expect("uri has no host");
-  let port = url.port_u16().unwrap_or(80);
-
-  let address = format!("{}:{}", host, port);
-
-  // Establish a TCP connection with the remote host.
-  let stream = TcpStream::connect(address).await.unwrap();
-
-  // Required to read from the stream
-  let io = TokioIo::new(stream);
-
-  let authority = url.authority().unwrap().clone();
-
-  let path = url.path();
-  let mut req = Request::builder()
-      .uri(path)
-      .header(hyper::header::HOST, authority.as_str())
-      .body(Empty::<Bytes>::new())
-      .unwrap();
-
-  match headers {
-      Some(h) => {
-        let headers_mutable = req.headers_mut();
-        for key in h.keys() {
-          headers_mutable.insert(HeaderName::from_str(key).unwrap(), HeaderValue::from_str(h.get(key).unwrap()).unwrap());
+    // Attach headers if provided
+    if let Some(h) = headers {
+        for (key, value) in h.iter() {
+            request_builder = request_builder.header(key.as_str(), value.as_str());
         }
-      },
-      _ => println!("No headers to attach.")
-  }
+    }
 
-  // Create hyper HTTP client
-  let (mut sender, conn) = Builder::new()
-      .handshake::<_, Empty<Bytes>>(io)
-      .await
-      .unwrap();
+    let request = request_builder.body(()).unwrap();
+    let mut response = isahc::send_async(request).await.unwrap();
 
-  tokio::task::spawn(async move {
-      if let Err(err) = conn.await {
-          println!("Connection failed: {:?}", err);
-      }
-  });
+    let response_body = response.text().await.unwrap();
 
-  // Obtain the response stream (frame)
-  let mut res = sender.send_request(req).await.unwrap();
+    dbg!(&response_body);
 
-  println!("Response status: {}", res.status());
+    // Move the deserialization step outside the loop
+    let response_data: T = serde_json::from_str(&response_body).unwrap();
 
-  let mut response_body = Vec::new();
+    Ok(response_data)
+}
 
-  while let Some(next) = res.frame().await {
-      let frame = next.unwrap();
-      if let Some(chunk) = frame.data_ref() {
-          response_body.extend_from_slice(chunk);
-      }
-  }
-
-  // Move the deserialization step outside the loop
-  let response_data: T = serde_json::from_slice(&response_body).unwrap();
-
-  Ok(response_data)
+pub fn prepare_authorization_headers() -> HashMap<String, String> {
+    HashMap::from([(
+        "Authorization".to_string(),
+        format!(
+            "Basic {}",
+            BASE64_STANDARD.encode(format!(
+                "{}:{}",
+                dotenv!("RABBITMQ_MANAGEMENT_USERNAME"),
+                dotenv!("RABBITMQ_MANAGEMENT_PASSWORD")
+            ))
+        ),
+    )])
 }
 
 // Constructs a full URL by concatenating the root URI and the path.
@@ -152,7 +122,5 @@ where
 /// assert_eq!(full_url, "http://example.com/api/v1/resource");
 /// ```
 pub fn prepare_url(root_uri: &str, path: &str) -> Result<String, ()> {
-  Ok(format!("{}/{}", root_uri, path))
+    Ok(format!("{}/{}", root_uri, path))
 }
-
-
