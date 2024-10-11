@@ -1,3 +1,5 @@
+use crate::rabbitmq::constants::RABBITMQ_MANAGEMENT_ROOT;
+use crate::rabbitmq::constants::RABBITMQ_MANAGEMENT_USERNAME;
 use rabbitmq_messages_management::{prepare_authorization_headers, send_get};
 use serde::{Deserialize, Serialize};
 
@@ -120,7 +122,7 @@ pub(crate) struct ReductionsDetails {
 /// ```
 async fn get_queue_for_vhost(vhost: &str, queue_name: &str) -> Result<Vec<Queue>, ()> {
     let queues: Vec<Queue> = send_get(
-        dotenv!("RABBITMQ_MANAGEMENT_ROOT"),
+        &dotenv::var(RABBITMQ_MANAGEMENT_ROOT).expect("RABBITMQ_MANAGEMENT_ROOT not set"),
         Some(&prepare_authorization_headers()),
     )
     .await

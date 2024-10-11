@@ -1,6 +1,6 @@
 extern crate dotenv_codegen;
 
-mod constants;
+pub mod constants;
 use base64::prelude::*;
 
 use isahc::{prelude::*, Request};
