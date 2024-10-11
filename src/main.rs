@@ -1,7 +1,7 @@
 #[macro_use]
 extern crate dotenv_codegen;
 
-use rabbitmq_messages_management::{send_get, Authority};
+use rabbitmq_messages_management::send_get;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]

@@ -1,7 +1,6 @@
 extern crate hyper;
 
-use hyper::Uri;
-use serde::{de::Error, Deserialize};
+use serde::Deserialize;
 use tokio::net::TcpStream;
 use hyper_util::rt::TokioIo;
 use hyper::Request;
