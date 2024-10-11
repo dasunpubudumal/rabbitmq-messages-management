@@ -88,6 +88,28 @@ where
     Ok(response_data)
 }
 
+/// Prepares the authorization headers for RabbitMQ management API requests.
+///
+/// This function reads the RabbitMQ management username and password from environment variables,
+/// encodes them in Base64, and constructs the `Authorization` header required for making API requests.
+///
+/// # Returns
+///
+/// A `HashMap` containing the `Authorization` header with the encoded credentials.
+///
+/// # Panics
+///
+/// This function will panic if the environment variables `RABBITMQ_MANAGEMENT_USERNAME` or
+/// `RABBITMQ_MANAGEMENT_PASSWORD` are not set.
+///
+/// # Example
+///
+/// ```
+/// use std::collections::HashMap;
+///
+/// let headers = prepare_authorization_headers();
+/// assert!(headers.contains_key("Authorization"));
+/// ```
 pub fn prepare_authorization_headers() -> HashMap<String, String> {
     HashMap::from([(
         "Authorization".to_string(),
