@@ -1,12 +1,15 @@
 extern crate hyper;
 
+use hyper::header::HeaderName;
 use serde::Deserialize;
 use tokio::net::TcpStream;
 use hyper_util::rt::TokioIo;
-use hyper::{Request};
+use hyper::{header::HeaderValue, Request};
 use hyper::client::conn::http1::Builder;
 use http_body_util::{BodyExt, Empty};
 use hyper::body::Bytes;
+use std::collections::HashMap;
+use std::str::FromStr;
 
 /// Sends an HTTP GET request to
 #[derive(PartialEq)]
@@ -24,6 +27,7 @@ pub enum Authority {
 /// # Arguments
 ///
 /// - `uri`: A string slice that holds the URI to which the GET request will be sent.
+/// - `headers`: An optional reference to a `HashMap` containing headers to be included in the request. The keys and values in the `HashMap` must have a `'static` lifetime.
 ///
 /// # Returns
 ///
@@ -41,6 +45,7 @@ pub enum Authority {
 ///
 /// ```rust
 /// use serde::Deserialize;
+/// use std::collections::HashMap;
 ///
 /// #[derive(Deserialize, Debug)]
 /// struct Ip {
@@ -49,12 +54,15 @@ pub enum Authority {
 ///
 /// #[tokio::main]
 /// async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-///     let result: Ip = send_get("http://httpbin.org/ip").await.unwrap();
+///     let mut headers = HashMap::new();
+///     headers.insert("User-Agent".to_string(), "my-app/1.0".to_string());
+///
+///     let result: Ip = send_get("http://httpbin.org/ip", Some(&headers)).await.unwrap();
 ///     println!("{:?}", result);
 ///     Ok(())
 /// }
 /// ```
-pub async fn send_get<T>(uri: &str) -> Result<T, ()>
+pub async fn send_get<'a, T>(uri: &str, headers: Option<&'a HashMap<String, String>>) -> Result<T, ()>
 where
     T: for<'de> Deserialize<'de>,
 {
@@ -76,11 +84,21 @@ where
   let authority = url.authority().unwrap().clone();
 
   let path = url.path();
-  let req = Request::builder()
+  let mut req = Request::builder()
       .uri(path)
       .header(hyper::header::HOST, authority.as_str())
       .body(Empty::<Bytes>::new())
       .unwrap();
+
+  match headers {
+      Some(h) => {
+        let headers_mutable = req.headers_mut();
+        for key in h.keys() {
+          headers_mutable.insert(HeaderName::from_str(key).unwrap(), HeaderValue::from_str(h.get(key).unwrap()).unwrap());
+        }
+      },
+      _ => println!("No headers to attach.")
+  }
 
   // Create hyper HTTP client
   let (mut sender, conn) = Builder::new()
