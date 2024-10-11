@@ -9,13 +9,6 @@ use std::collections::HashMap;
 
 pub mod constants;
 
-/// Sends an HTTP GET request to
-#[derive(PartialEq)]
-pub enum Authority {
-    HTTP,
-    HTTPS,
-}
-
 /// Sends an HTTP GET request to the specified URI and deserializes the response body into the specified type.
 ///
 /// # Type Parameters
@@ -79,14 +72,14 @@ where
         }
     }
 
+    // Send the request and get the response to a string.
     let request = request_builder.body(()).unwrap();
     let mut response = isahc::send_async(request).await.unwrap();
-
     let response_body = response.text().await.unwrap();
 
-    dbg!(&response_body);
+    // TODO: Error handling
 
-    // Move the deserialization step outside the loop
+    // Convert to a struct so that accessing the response is easier.
     let response_data: T = serde_json::from_str(&response_body).unwrap();
 
     Ok(response_data)
@@ -117,6 +110,7 @@ where
 /// # }
 /// ```
 pub fn prepare_authorization_headers() -> HashMap<String, String> {
+    // TODO: Error handling
     HashMap::from([(
         "Authorization".to_string(),
         format!(

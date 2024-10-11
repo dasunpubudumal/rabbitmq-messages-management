@@ -193,6 +193,7 @@ pub(crate) struct ReductionsDetails {
 /// }
 /// ```
 pub async fn get_queue_for_vhost(vhost: &str) -> Result<Vec<Queue>, ()> {
+    // TODO: Error handling
     let root = &dotenv::var(RABBITMQ_MANAGEMENT_ROOT).expect("RABBITMQ_MANAGEMENT_ROOT not set");
     let url = prepare_url(&root, &format!("api/queues/{}", vhost)).unwrap();
     let queues: Vec<Queue> = send_get(&url, Some(&prepare_authorization_headers()))
