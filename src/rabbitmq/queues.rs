@@ -1,5 +1,4 @@
 use crate::rabbitmq::constants::RABBITMQ_MANAGEMENT_ROOT;
-use crate::rabbitmq::constants::RABBITMQ_MANAGEMENT_USERNAME;
 use rabbitmq_messages_management::{prepare_authorization_headers, send_get};
 use serde::{Deserialize, Serialize};
 
