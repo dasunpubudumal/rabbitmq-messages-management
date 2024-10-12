@@ -131,6 +131,7 @@ where
 ///     println!("{:?}", response);
 ///
 ///     Ok(())
+/// }
 /// # }
 /// ```
 pub async fn send_post<'a, T, B>(

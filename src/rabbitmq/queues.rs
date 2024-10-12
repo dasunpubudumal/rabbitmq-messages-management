@@ -1,5 +1,9 @@
+use std::collections::HashMap;
+
 use crate::constants::RABBITMQ_MANAGEMENT_ROOT;
-use rabbitmq_messages_management::{prepare_authorization_headers, prepare_url, send_get};
+use rabbitmq_messages_management::{
+    prepare_authorization_headers, prepare_url, send_get, send_post,
+};
 use serde::{Deserialize, Serialize};
 
 // Represents a RabbitMQ queue.
@@ -166,11 +170,66 @@ pub(crate) struct ReductionsDetails {
     rate: f64,
 }
 
+/// Represents the request for retrieving messages from a queue
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(crate = "rocket::serde")]
+pub(crate) struct MessageRetrievalRequest {
+    /// Vhost of the queue
+    vhost: String,
+    /// Name of the queue
+    name: String,
+    /// For requeuing, do `ack_requeue_true`
+    ackmode: String,
+    /// Must be either "auto" (in which case the payload will be returned as a string if it is valid UTF-8,
+    ///  and base64 encoded otherwise), or "base64" (in which case the payload will always be base64 encoded).
+    encoding: String,
+    /// Controls the maximum number of messages to get.
+    ///  You may get fewer messages than this if the queue cannot immediately provide them.
+    count: u64,
+}
+
+/// Represents the properties of a RabbitMQ message.
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(crate = "rocket::serde")]
+pub struct Properties {
+    /// Priority of the message.
+    priority: u8,
+    /// Delivery mode of the message.
+    delivery_mode: u8,
+    /// Headers associated with the message.
+    headers: HashMap<String, serde_json::Value>,
+    /// Content type of the message.
+    content_type: String,
+}
+
+/// Represents a RabbitMQ message.
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(crate = "rocket::serde")]
+pub struct RabbitMQMessage {
+    /// Number of bytes in the payload.
+    payload_bytes: u64,
+    /// Indicates if the message was redelivered.
+    redelivered: bool,
+    /// Name of the exchange.
+    exchange: String,
+    /// Routing key used for the message.
+    routing_key: String,
+    /// Number of messages in the queue.
+    message_count: u64,
+    /// Properties of the message.
+    properties: Properties,
+    /// Payload of the message.
+    payload: String,
+    /// Encoding of the payload.
+    payload_encoding: String,
+}
+
 /// Fetches the details of a specific queue for a given virtual host.
 ///
 /// This function sends an HTTP GET request to the RabbitMQ management API to retrieve the details
 /// of queues in specified virtual host. The function uses the `send_get` function
 /// to perform the HTTP request and deserializes the response into a vector of `Queue` structs.
+///
 ///
 /// # Arguments
 ///
@@ -183,14 +242,16 @@ pub(crate) struct ReductionsDetails {
 /// # Example
 ///
 /// ```rust
+/// # #[cfg(doctest)] {
 /// #[tokio::main]
 /// async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
 ///     use rabbitmq_messages_management::rabbitmq::queues::get_queue_for_vhost;
 ///     let vhost = "my_vhost";
 ///     let queues = get_queue_for_vhost(vhost).await.unwrap();
 ///     println!("{:?}", queues);
-///     Ok(())
+///     Ok(())~
 /// }
+/// # }
 /// ```
 pub async fn get_queue_for_vhost(vhost: &str) -> Result<Vec<Queue>, ()> {
     // TODO: Error handling
@@ -200,4 +261,68 @@ pub async fn get_queue_for_vhost(vhost: &str) -> Result<Vec<Queue>, ()> {
         .await
         .unwrap();
     Ok(queues)
+}
+
+/// Retrieves messages from a specified queue in a given virtual host.
+///
+/// This function sends an HTTP POST request to the RabbitMQ management API to retrieve messages
+/// from a specified queue in a given virtual host. The request includes the virtual host, queue name,
+/// and the number of messages to retrieve. The response is deserialized into a vector of `RabbitMQMessage` structs.
+///
+/// # Arguments
+///
+/// * `vhost` - A string representing the virtual host from which to retrieve messages.
+/// * `queue_name` - A string representing the name of the queue from which to retrieve messages.
+/// * `count` - A u64 representing the number of messages to retrieve.
+///
+/// # Example
+///
+/// ```rust
+/// # #[cfg(doctest)] {
+/// #[tokio::main]
+/// async fn main() {
+///     let vhost = "my_vhost".to_string();
+///     let queue_name = "my_queue".to_string();
+///     let count = 10;
+///
+///     get_messages_from_a_queue(vhost, queue_name, count).await;
+/// }
+/// # }
+/// ```
+pub async fn get_messages_from_a_queue(
+    vhost: String,
+    queue_name: String,
+    count: u64,
+) -> Result<Vec<RabbitMQMessage>, ()> {
+    let root = &dotenv::var(RABBITMQ_MANAGEMENT_ROOT).expect("RABBITMQ_MANAGEMENT_ROOT not set");
+    let url = prepare_url(&root, &format!("api/queues/{}/{}/get", vhost, queue_name)).unwrap();
+    let request = MessageRetrievalRequest {
+        vhost,
+        name: queue_name,
+        ackmode: "ack_requeue_true".to_string(),
+        encoding: "auto".to_string(),
+        count,
+    };
+    // The following other types implement trait `From<T>`:
+    //  ```
+    //  <isahc::body::AsyncBody as From<&[u8]>>
+    //  <isahc::body::AsyncBody as From<&str>>
+    //  <isahc::body::AsyncBody as From<()>>
+    //  <isahc::body::AsyncBody as From<Vec<u8>>>
+    //  <isahc::body::AsyncBody as From<std::option::Option<T>>>
+    //  <isahc::body::AsyncBody as From<std::string::String>>
+    // ```
+    //
+    // Therefore, if the request body is not of type `&[u8]`, `&str`, `()`, `Vec<u8>`, or `std::string::String`
+    //  make sure you implement it for the request body you're setting.
+    // I suggest use serde_json::to_string to convert the struct to a string and use it as a body.
+    let messages: Vec<RabbitMQMessage> = send_post(
+        &url,
+        Some(&prepare_authorization_headers()),
+        serde_json::to_string(&request).unwrap(),
+    )
+    .await
+    .unwrap();
+
+    Ok(messages)
 }
