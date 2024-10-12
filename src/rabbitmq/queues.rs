@@ -256,7 +256,7 @@ pub struct RabbitMQMessage {
 pub async fn get_queue_for_vhost(vhost: &str) -> Result<Vec<Queue>, ()> {
     // TODO: Error handling
     let root = &dotenv::var(RABBITMQ_MANAGEMENT_ROOT).expect("RABBITMQ_MANAGEMENT_ROOT not set");
-    let url = prepare_url(&root, &format!("api/queues/{}", vhost)).unwrap();
+    let url = prepare_url(root, &format!("api/queues/{}", vhost)).unwrap();
     let queues: Vec<Queue> = send_get(&url, Some(&prepare_authorization_headers()))
         .await
         .unwrap();
@@ -295,7 +295,7 @@ pub async fn get_messages_from_a_queue(
     count: u64,
 ) -> Result<Vec<RabbitMQMessage>, ()> {
     let root = &dotenv::var(RABBITMQ_MANAGEMENT_ROOT).expect("RABBITMQ_MANAGEMENT_ROOT not set");
-    let url = prepare_url(&root, &format!("api/queues/{}/{}/get", vhost, queue_name)).unwrap();
+    let url = prepare_url(root, &format!("api/queues/{}/{}/get", vhost, queue_name)).unwrap();
     let request = MessageRetrievalRequest {
         vhost,
         name: queue_name,

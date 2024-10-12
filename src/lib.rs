@@ -9,6 +9,8 @@ use std::collections::HashMap;
 
 pub mod constants;
 
+use constants::{RABBITMQ_MANAGEMENT_PASSWORD, RABBITMQ_MANAGEMENT_USERNAME};
+
 /// Sends an HTTP GET request to the specified URI and deserializes the response body into the specified type.
 ///
 /// # Type Parameters
@@ -193,9 +195,9 @@ pub fn prepare_authorization_headers() -> HashMap<String, String> {
             "Basic {}",
             BASE64_STANDARD.encode(format!(
                 "{}:{}",
-                dotenv::var(constants::RABBITMQ_MANAGEMENT_USERNAME)
+                dotenv::var(RABBITMQ_MANAGEMENT_USERNAME)
                     .expect("RABBITMQ_MANAGEMENT_USERNAME not set"),
-                dotenv::var(constants::RABBITMQ_MANAGEMENT_PASSWORD)
+                dotenv::var(RABBITMQ_MANAGEMENT_PASSWORD)
                     .expect("RABBITMQ_MANAGEMENT_PASSWORD not set")
             ))
         ),
