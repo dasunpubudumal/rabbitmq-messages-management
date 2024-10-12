@@ -1,5 +1,5 @@
 use crate::rabbitmq::queues::{
-    get_messages_from_a_queue, get_queue_for_vhost, MessageRetrievalRequest, Queue, RabbitMQMessage,
+    get_messages_from_a_queue, get_queue_for_vhost, Queue, RabbitMQMessage,
 };
 use rocket::serde::json::Json;
 
