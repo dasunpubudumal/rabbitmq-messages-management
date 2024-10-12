@@ -1,5 +1,5 @@
 use crate::rabbitmq::queues::{
-    get_messages_from_a_queue, get_queue_for_vhost, Queue, RabbitMQMessage,
+    get_messages_from_a_queue, get_queue_for_vhost, Queue, ResponseForQueryingMessages,
 };
 use rocket::serde::json::Json;
 
@@ -9,7 +9,11 @@ pub async fn queues(vhost: &str) -> Json<Vec<Queue>> {
 }
 
 #[get("/<vhost>/<queue_name>?<count>")]
-pub async fn messages(vhost: &str, queue_name: &str, count: &str) -> Json<Vec<RabbitMQMessage>> {
+pub async fn messages(
+    vhost: &str,
+    queue_name: &str,
+    count: &str,
+) -> Json<Vec<ResponseForQueryingMessages>> {
     let number: u64 = count
         .parse::<u64>()
         .expect("Failed to parse string to a valid count");

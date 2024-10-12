@@ -224,6 +224,18 @@ pub struct RabbitMQMessage {
     payload_encoding: String,
 }
 
+/// API response for querying messages from a queue.
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(crate = "rocket::serde")]
+pub struct ResponseForQueryingMessages {
+    /// Payload from a queue
+    payload: String,
+    /// Encoding of the payload
+    payload_encoding: String,
+    /// Content type of the payload
+    content_type: String,
+}
+
 /// Fetches the details of a specific queue for a given virtual host.
 ///
 /// This function sends an HTTP GET request to the RabbitMQ management API to retrieve the details
@@ -267,7 +279,8 @@ pub async fn get_queue_for_vhost(vhost: &str) -> Result<Vec<Queue>, ()> {
 ///
 /// This function sends an HTTP POST request to the RabbitMQ management API to retrieve messages
 /// from a specified queue in a given virtual host. The request includes the virtual host, queue name,
-/// and the number of messages to retrieve. The response is deserialized into a vector of `RabbitMQMessage` structs.
+/// and the number of messages to retrieve. The response is deserialized into a vector of `RabbitMQMessage` structs,
+/// and the payloads of these messages are returned as a vector of `ResponseForQueryingMessages` structs.
 ///
 /// # Arguments
 ///
@@ -275,25 +288,36 @@ pub async fn get_queue_for_vhost(vhost: &str) -> Result<Vec<Queue>, ()> {
 /// * `queue_name` - A string representing the name of the queue from which to retrieve messages.
 /// * `count` - A u64 representing the number of messages to retrieve.
 ///
+/// # Returns
+///
+/// * `Result<Vec<ResponseForQueryingMessages>, ()>` - On success, returns a vector of `ResponseForQueryingMessages` structs. On failure, returns an empty tuple `()`.
+///
 /// # Example
 ///
 /// ```rust
-/// # #[cfg(doctest)] {
 /// #[tokio::main]
 /// async fn main() {
 ///     let vhost = "my_vhost".to_string();
 ///     let queue_name = "my_queue".to_string();
 ///     let count = 10;
 ///
-///     get_messages_from_a_queue(vhost, queue_name, count).await;
+///     match get_messages_from_a_queue(vhost, queue_name, count).await {
+///         Ok(messages) => {
+///             for message in messages {
+///                 println!("Payload: {}", message.payload);
+///                 println!("Payload Encoding: {}", message.payload_encoding);
+///                 println!("Content Type: {}", message.content_type);
+///             }
+///         }
+///         Err(_) => println!("Failed to retrieve messages"),
+///     }
 /// }
-/// # }
 /// ```
 pub async fn get_messages_from_a_queue(
     vhost: String,
     queue_name: String,
     count: u64,
-) -> Result<Vec<RabbitMQMessage>, ()> {
+) -> Result<Vec<ResponseForQueryingMessages>, ()> {
     let root = &dotenv::var(RABBITMQ_MANAGEMENT_ROOT).expect("RABBITMQ_MANAGEMENT_ROOT not set");
     let url = prepare_url(root, &format!("api/queues/{}/{}/get", vhost, queue_name)).unwrap();
     let request = MessageRetrievalRequest {
@@ -324,5 +348,14 @@ pub async fn get_messages_from_a_queue(
     .await
     .unwrap();
 
-    Ok(messages)
+    let payloads: Vec<ResponseForQueryingMessages> = messages
+        .iter()
+        .map(|message| ResponseForQueryingMessages {
+            payload: message.payload.clone(),
+            payload_encoding: message.payload_encoding.clone(),
+            content_type: message.properties.content_type.clone(),
+        })
+        .collect();
+
+    Ok(payloads)
 }
