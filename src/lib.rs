@@ -2,7 +2,7 @@ extern crate dotenv_codegen;
 
 use base64::prelude::*;
 
-use isahc::{prelude::*, Request};
+use isahc::{prelude::*, AsyncBody, Request};
 
 use serde::Deserialize;
 use std::collections::HashMap;
@@ -80,6 +80,81 @@ where
     // TODO: Error handling
 
     // Convert to a struct so that accessing the response is easier.
+    let response_data: T = serde_json::from_str(&response_body).unwrap();
+
+    Ok(response_data)
+}
+
+/// Sends an asynchronous HTTP POST request.
+///
+/// This function sends an HTTP POST request to the specified URI with optional headers and a body.
+/// The response is deserialized into the specified type `T`.
+///
+/// # Arguments
+///
+/// * `uri` - A string slice that holds the URI to which the request is sent.
+/// * `headers` - An optional reference to a `HashMap` containing the headers to be included in the request.
+/// * `body` - The body of the request, which will be converted into an `AsyncBody`.
+///
+/// # Returns
+///
+/// * `Result<T, ()>` - On success, returns the deserialized response body of type `T`. On failure, returns an empty tuple `()`.
+///
+/// # Type Parameters
+///
+/// * `T` - The type into which the response body will be deserialized. This type must implement the `Deserialize` trait for any lifetime `'de`.
+/// * `B` - The type of the request body. This type must implement the `From<B>` trait to be converted into an `AsyncBody`.
+///
+/// # Example
+///
+/// ```rust
+/// # #[cfg(doctest)] {
+/// use std::collections::HashMap;
+/// use serde::Deserialize;
+/// use isahc::prelude::*;
+/// use isahc::Request;
+/// use rabbitmq_messages_management::send_post;
+///
+/// #[derive(Deserialize, Debug)]
+/// struct MyResponse {
+///     message: String,
+/// }
+///
+/// #[tokio::main]
+/// async fn main() -> Result<(), Box<dyn std::error::Error>> {
+///     let uri = "http://example.com/api";
+///     let mut headers = HashMap::new();
+///     headers.insert("Content-Type".to_string(), "application/json".to_string());
+///     let body = r#"{"key": "value"}"#;
+///
+///     let response: MyResponse = send_post(uri, Some(&headers), body).await.unwrap();
+///     println!("{:?}", response);
+///
+///     Ok(())
+/// # }
+/// ```
+pub async fn send_post<'a, T, B>(
+    uri: &str,
+    headers: Option<&'a HashMap<String, String>>,
+    body: B,
+) -> Result<T, ()>
+where
+    AsyncBody: From<B>,
+    T: for<'de> Deserialize<'de>,
+{
+    let mut request_builder = Request::post(uri);
+
+    // Attach headers if provided
+    if let Some(h) = headers {
+        for (key, value) in h.iter() {
+            request_builder = request_builder.header(key.as_str(), value.as_str());
+        }
+    }
+
+    let request = request_builder.body(body).unwrap();
+    let mut response = isahc::send_async(request).await.unwrap();
+    let response_body = response.text().await.unwrap();
+
     let response_data: T = serde_json::from_str(&response_body).unwrap();
 
     Ok(response_data)
