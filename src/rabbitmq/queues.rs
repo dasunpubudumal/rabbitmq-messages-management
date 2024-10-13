@@ -193,13 +193,13 @@ pub(crate) struct MessageRetrievalRequest {
 #[serde(crate = "rocket::serde")]
 pub struct Properties {
     /// Priority of the message.
-    priority: u8,
+    priority: Option<u8>,
     /// Delivery mode of the message.
     delivery_mode: u8,
     /// Headers associated with the message.
     headers: HashMap<String, serde_json::Value>,
     /// Content type of the message.
-    content_type: String,
+    content_type: Option<String>,
 }
 
 /// Represents a RabbitMQ message.
@@ -232,8 +232,6 @@ pub struct ResponseForQueryingMessages {
     payload: String,
     /// Encoding of the payload
     payload_encoding: String,
-    /// Content type of the payload
-    content_type: String,
 }
 
 /// Fetches the details of a specific queue for a given virtual host.
@@ -353,7 +351,6 @@ pub async fn get_messages_from_a_queue(
         .map(|message| ResponseForQueryingMessages {
             payload: message.payload.clone(),
             payload_encoding: message.payload_encoding.clone(),
-            content_type: message.properties.content_type.clone(),
         })
         .collect();
 
