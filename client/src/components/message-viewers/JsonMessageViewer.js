@@ -22,7 +22,12 @@ export default function JsonMessageViewer({ messages }) {
   const renderJson = (values) => {
     return (
       <Container>
-        <JsonView value={values} collapsed={true} displayDataTypes={true} displayObjectSize={true} />
+        <JsonView
+          value={values}
+          collapsed={true}
+          displayDataTypes={true}
+          displayObjectSize={true}
+        />
       </Container>
     );
   };

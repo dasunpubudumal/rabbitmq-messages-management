@@ -6,6 +6,11 @@ import { Routes, Route, useNavigate } from "react-router-dom";
 import Queue from "./components/Queue";
 import { Box } from "@mui/material";
 
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import { Link } from "react-router-dom";
+
 export default function App() {
   const [vhosts, setVhosts] = useState([]);
   const [selectedVhost, setSelectedVhost] = useState("");
@@ -63,36 +68,53 @@ export default function App() {
 
   return (
     <>
-      <PageContainer>
-        <Box
-        display="flex"
-        flexDirection="column"
-        justifyContent="center"
-        height="90vh" // Full viewport height
-        >
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <>
-                  <Vhosts
-                    selectedVhost={selectedVhost}
-                    handleChange={handleVhostChange}
-                    vhosts={vhosts}
-                  />
-                  {queues && (
-                    <Queues
-                      queues={queues}
-                      handleSelectedQueueChange={handleSelectedQueueChange}
-                    />
-                  )}
-                </>
-              }
-            />
-            <Route path=":vhost/queues/:queue" element={<Queue />} />
-        </Routes>
+      <Box
+        sx={{
+          background:
+            "linear-gradient(to bottom right, orange, #f07926, #ff9600, #ffb74d, white)",
+        }}
+      >
+        <Box>
+          <AppBar position="static" color="warning">
+            <Toolbar>
+              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                  <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>RabbitMQ Message Viewer</Link>
+              </Typography>
+            </Toolbar>
+          </AppBar>
         </Box>
-      </PageContainer>
+
+        <PageContainer>
+          <Box
+            display="flex"
+            flexDirection="column"
+            justifyContent="center"
+            height="95vh"
+          >
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <>
+                    <Vhosts
+                      selectedVhost={selectedVhost}
+                      handleChange={handleVhostChange}
+                      vhosts={vhosts}
+                    />
+                    {queues && (
+                      <Queues
+                        queues={queues}
+                        handleSelectedQueueChange={handleSelectedQueueChange}
+                      />
+                    )}
+                  </>
+                }
+              />
+              <Route path=":vhost/queues/:queue" element={<Queue />} />
+            </Routes>
+          </Box>
+        </PageContainer>
+      </Box>
     </>
   );
 }

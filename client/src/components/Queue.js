@@ -126,6 +126,7 @@ export default function Queue() {
             autoComplete="off"
           >
             <div>
+              {/* inputProps is deprecated. Fix it later. */}
               <TextField
                 required
                 id="count"
@@ -133,6 +134,7 @@ export default function Queue() {
                 label="Number of messages"
                 defaultValue="Hello World"
                 onChange={handleCountChange}
+                inputProps={{ min: 0 }}
               />
             </div>
           </Box>

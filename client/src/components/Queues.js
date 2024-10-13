@@ -15,19 +15,35 @@ import { Box, Typography } from "@mui/material";
 export default function Queues({ queues, handleSelectedQueueChange }) {
   return (
     <>
-      <Box sx={{bt: 4}}></Box>
-      <Typography variant="h5" gutterBottom>Queues</Typography>
-      <ButtonGroup orientation="vertical" aria-label="Vertical button group">
-        {queues.map((queue, index) => (
-          <Button
-            key={index}
-            onClick={() => handleSelectedQueueChange(queue.name)}
-            color="warning"
-          >
-            {queue.name}
-          </Button>
-        ))}
-      </ButtonGroup>
+      <Box sx={{ bt: 4 }}>
+        {queues.length > 0 && (
+          <>
+            <Typography variant="h5" gutterBottom>
+              Queues
+            </Typography>
+            <ButtonGroup
+              orientation="vertical"
+              aria-label="Vertical button group"
+            >
+              {queues.map((queue, index) => (
+                <Button
+                  key={index}
+                  onClick={() => handleSelectedQueueChange(queue.name)}
+                  color="warning"
+                  variant="contained"
+                >
+                  {queue.name}
+                </Button>
+              ))}
+            </ButtonGroup>
+          </>
+        )}
+        {queues.length === 0 && (
+          <Typography variant="subtitle1" gutterBottom>
+            Please select a vhost.
+          </Typography>
+        )}
+      </Box>
     </>
   );
 }

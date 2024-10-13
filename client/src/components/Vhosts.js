@@ -7,13 +7,17 @@ import { Box, Typography } from "@mui/material";
 export default function Vhosts({ selectedVhost, handleChange, vhosts }) {
   return (
     <>
-      <Box sx={{pb: 4}}>
-        <Typography variant="h5" gutterBottom>Vhosts</Typography>
-        <FormControl fullWidth>
+      <Box sx={{ pb: 4 }}>
+        <Typography variant="h5" gutterBottom>
+          Vhosts
+        </Typography>
+        <FormControl>
           <Select
             id="vhost-select"
             value={selectedVhost}
             onChange={handleChange}
+            style={{ minWidth: 200 }}
+            sx={{ backgroundColor: "white" }}
           >
             {vhosts.map((vhost, index) => (
               <MenuItem value={vhost.name} key={index}>
@@ -24,6 +28,5 @@ export default function Vhosts({ selectedVhost, handleChange, vhosts }) {
         </FormControl>
       </Box>
     </>
-    
   );
 }
