@@ -9,7 +9,8 @@ import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Modal from "@mui/material/Modal";
 import { filterMessages } from "../utilities/messages";
-import JsonMessageViewer from "./JsonMessageViewer";
+import JsonMessageViewer from "./message-viewers/JsonMessageViewer";
+import MessageViewer from "./message-viewers/MessageViewer";
 
 const style = {
   position: "absolute",
@@ -73,7 +74,6 @@ export default function Queue() {
    * @param {Array} messages - The array of messages to be filtered and categorized.
    */
   const setMessageTypes = (messages) => {
-    console.log(messages);
     const { jsonMessages, stringMessages, base64Messages } =
       filterMessages(messages);
     setJsonMessages(jsonMessages);
@@ -156,7 +156,7 @@ export default function Queue() {
       </Card>
 
       {/* Displays messages */}
-      <JsonMessageViewer messages={jsonMessages} />
+      <MessageViewer jsonMessages={jsonMessages} />
     </>
   );
 }
