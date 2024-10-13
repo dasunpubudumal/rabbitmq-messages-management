@@ -11,12 +11,14 @@ import ButtonGroup from "@mui/material/ButtonGroup";
  * @param {Array} props.queues - The list of queues to be displayed.
  * @returns {JSX.Element} A JSX element displaying the list of queues.
  */
-export default function Queues({ queues }) {
+export default function Queues({ queues, handleSelectedQueueChange }) {
   return (
     <div>
       <ButtonGroup orientation="vertical" aria-label="Vertical button group">
         {queues.map((queue, index) => (
-          <Button key={index}>{queue.name}</Button>
+          <Button key={index} onClick={() => handleSelectedQueueChange(queue.name)}>
+            {queue.name}
+          </Button>
         ))}
       </ButtonGroup>
     </div>

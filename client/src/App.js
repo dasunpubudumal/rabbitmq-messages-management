@@ -4,12 +4,15 @@ import { PageContainer } from "@toolpad/core/PageContainer";
 import { Container } from "@mui/material";
 import Queues from "./components/Queues";
 import Vhosts from "./components/Vhosts";
+import { Routes, Route, useNavigate } from "react-router-dom";
+import Queue from "./components/Queue";
 
 export default function App() {
   const [vhosts, setVhosts] = useState([]);
   const [selectedVhost, setSelectedVhost] = useState("");
   const [queues, setQueues] = useState([]);
   const [selectedQueue, setSelectedQueue] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function responses() {
@@ -27,10 +30,24 @@ export default function App() {
    *
    * @param {Object} event - The event object from the dropdown menu.
    */
-  const handleChange = async (event) => {
+  const handleVhostChange = async (event) => {
     const vhost = event.target.value;
     setSelectedVhost(vhost);
     await getQueues(vhost);
+  };
+
+  /**
+   * Handles the change event for the queue selection.
+   *
+   * This function is called when the user selects a different queue from the dropdown menu.
+   * It updates the state with the selected queue.
+   *
+   * @param {Object} event - The event object from the dropdown menu.
+   */
+  const handleSelectedQueueChange = (queueName) => {
+    setSelectedQueue(queueName);
+    console.log(`Selected queue: ${queueName}`)
+    navigate(`${selectedVhost}/queues/${queueName}`);
   };
 
   /**
@@ -66,12 +83,27 @@ export default function App() {
   return (
     <>
       <PageContainer>
-        <Vhosts
-          selectedVhost={selectedVhost}
-          handleChange={handleChange}
-          vhosts={vhosts}
-        />
-        {queues && <Queues queues={queues} />}
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <>
+                <Vhosts
+                  selectedVhost={selectedVhost}
+                  handleChange={handleVhostChange}
+                  vhosts={vhosts}
+                />
+                {queues && (
+                  <Queues
+                    queues={queues}
+                    handleSelectedQueueChange={handleSelectedQueueChange}
+                  />
+                )}
+              </>
+            }
+          />
+          <Route path=":vhost/queues/:queue" element={<Queue />} />
+        </Routes>
       </PageContainer>
     </>
   );
