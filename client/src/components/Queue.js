@@ -9,8 +9,8 @@ import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Modal from "@mui/material/Modal";
 import { filterMessages } from "../utilities/messages";
-import JsonMessageViewer from "./message-viewers/JsonMessageViewer";
 import MessageViewer from "./message-viewers/MessageViewer";
+import ReusableModal from "./fragments/ReusableModal";
 
 const style = {
   position: "absolute",
@@ -94,21 +94,13 @@ export default function Queue() {
 
   return (
     <>
-      <Modal
+      <ReusableModal
         open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Incorrect message count.
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Please enter the number of messages to return.
-          </Typography>
-        </Box>
-      </Modal>
+        handleClose={handleClose}
+        style={style}
+        title="Incorrect message count"
+        message="Please provide a message count."
+      />
 
       {/* Card view - Manages user input and statistics of the queue */}
       <Card sx={{ minWidth: 275 }}>
@@ -156,7 +148,11 @@ export default function Queue() {
       </Card>
 
       {/* Displays messages */}
-      <MessageViewer jsonMessages={jsonMessages} />
+      <MessageViewer
+        jsonMessages={jsonMessages}
+        base64EncodedMessages={base64Messages}
+        stringMessages={stringMessages}
+      />
     </>
   );
 }

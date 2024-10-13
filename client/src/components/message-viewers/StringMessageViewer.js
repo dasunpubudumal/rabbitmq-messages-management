@@ -1,3 +1,1 @@
-export default function StringMessageViewer({messages}) {
-
-}
+export default function StringMessageViewer({ messages }) {}

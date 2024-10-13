@@ -21,9 +21,7 @@ export default function ReusableAccordion({ title, ChildComponent, messages }) {
         aria-controls="panel1-content"
         id="panel1-header"
       >
-        <Typography sx={{ width: "33%", flexShrink: 0 }}>
-          {title}
-        </Typography>
+        <Typography sx={{ width: "33%", flexShrink: 0 }}>{title}</Typography>
         <Typography sx={{ color: "text.secondary" }}>
           # of messages: {messages && messages.length} {!messages && 0}
         </Typography>
@@ -33,4 +31,4 @@ export default function ReusableAccordion({ title, ChildComponent, messages }) {
       </AccordionDetails>
     </Accordion>
   );
-};
+}
