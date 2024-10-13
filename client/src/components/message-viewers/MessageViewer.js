@@ -22,10 +22,9 @@ export default function MessageViewer({
           <Typography sx={{ width: "33%", flexShrink: 0 }}>
             Json Messages
           </Typography>
-          <Typography sx={{ color: "text.secondary" }}>Number: ()</Typography>
+          <Typography sx={{ color: "text.secondary" }}># of messages: {jsonMessages.length}</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          {console.log(jsonMessages)}
           <JsonMessageViewer messages={jsonMessages} />
         </AccordionDetails>
       </Accordion>
