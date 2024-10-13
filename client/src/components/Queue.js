@@ -25,13 +25,13 @@ export default function Queue() {
   const [open, setOpen] = useState(false);
   const { vhost, queue } = useParams();
   const [messages, setMessages] = useState([]);
-  const [count, setCount] = useState([]);
+  const [count, setCount] = useState(0);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   const getMessages = async (count) => {
-    if (!count) {
+    if (count === 0) {
       handleOpen();
     } else {
       let response = await fetch(`/queues/${vhost}/${queue}?count=1`);
