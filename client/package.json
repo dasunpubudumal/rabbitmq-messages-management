@@ -19,7 +19,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "BUILD_PATH=../static react-scripts build",
     "test": "jest",
     "eject": "react-scripts eject",
     "lint": "eslint  --fix src/**/*.js",
