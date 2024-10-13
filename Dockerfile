@@ -15,7 +15,6 @@ ENV ROCKET_PORT=8088
 
 WORKDIR /app
 COPY . .
-COPY --from=frontend-builder /frontend/build /app/static
 
 RUN cargo build --release
 
@@ -26,7 +25,7 @@ ENV ROCKET_ADDRESS=0.0.0.0
 ENV ROCKET_PORT=8088
 
 WORKDIR /app
-COPY --from=backend-builder /app/target/release/your-rust-app /app/your-rust-app
+COPY --from=backend-builder /app/target/release/rabbitmq-messages-management /app/rabbitmq-messages-management
 COPY --from=backend-builder /app/static /app/static
 
 CMD ["./rabbitmq-messages-management"]
