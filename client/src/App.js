@@ -46,7 +46,7 @@ export default function App() {
    */
   const handleSelectedQueueChange = (queueName) => {
     setSelectedQueue(queueName);
-    console.log(`Selected queue: ${queueName}`)
+    console.log(`Selected queue: ${queueName}`);
     navigate(`${selectedVhost}/queues/${queueName}`);
   };
 

@@ -16,7 +16,10 @@ export default function Queues({ queues, handleSelectedQueueChange }) {
     <div>
       <ButtonGroup orientation="vertical" aria-label="Vertical button group">
         {queues.map((queue, index) => (
-          <Button key={index} onClick={() => handleSelectedQueueChange(queue.name)}>
+          <Button
+            key={index}
+            onClick={() => handleSelectedQueueChange(queue.name)}
+          >
             {queue.name}
           </Button>
         ))}
