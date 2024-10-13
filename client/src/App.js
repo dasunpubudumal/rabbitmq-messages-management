@@ -4,12 +4,14 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import { PageContainer } from '@toolpad/core/PageContainer';
+import { PageContainer } from "@toolpad/core/PageContainer";
 import { Container } from "@mui/material";
 
 export default function App() {
   const [vhosts, setVhosts] = useState([]);
   const [selectedVhost, setSelectedVhost] = useState("");
+  const [queues, setQueues] = useState([]);
+  const [selectedQueue, setSelectedQueue] = useState("");
 
   useEffect(() => {
     async function responses() {
@@ -19,8 +21,47 @@ export default function App() {
     responses();
   }, []);
 
-  const handleChange = (event) => {
+  /**
+   * Handles the change event for the virtual host selection.
+   *
+   * This function is called when the user selects a different virtual host from the dropdown menu.
+   * It updates the state with the selected virtual host.
+   *
+   * @param {Object} event - The event object from the dropdown menu.
+   */
+  const handleChange = async (event) => {
     setSelectedVhost(event.target.value);
+    await getQueues(selectedVhost);
+  };
+
+  /**
+   * Fetches the list of queues for a given virtual host.
+   *
+   * This asynchronous function sends an HTTP GET request to the server to retrieve the list of queues
+   * for the specified virtual host. The response is then parsed as JSON and the state is updated with the list of queues.
+   *
+   * @param {string} vhost - The name of the virtual host for which to retrieve the queues.
+   */
+  const getQueues = async (vhost) => {
+    let response = await fetch(`/queues/${vhost}`);
+    setQueues(await response.json());
+  };
+
+  /**
+   * Renders a JSON view inside a container.
+   *
+   * This function takes a JSON object as input and returns a JSX element that displays
+   * the JSON object using the `JsonView` component inside a `Container` component.
+   *
+   * @param {Object} values - The JSON object to be displayed.
+   * @returns {JSX.Element} A JSX element containing the JSON view.
+   */
+  const renderJson = (values) => {
+    return (
+      <Container>
+        <JsonView value={values} />
+      </Container>
+    );
   };
 
   return (
@@ -42,9 +83,6 @@ export default function App() {
             ))}
           </Select>
         </FormControl>
-        <Container>
-          <JsonView value={vhosts} />
-        </Container>
       </PageContainer>
     </>
   );
