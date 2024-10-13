@@ -53,10 +53,10 @@ export default function Queue() {
       >
         <Box sx={style}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
-            Text in a modal
+            Incorrect message count.
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+            Please enter the number of messages to return.
           </Typography>
         </Box>
       </Modal>
