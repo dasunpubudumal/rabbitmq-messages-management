@@ -1,4 +1,6 @@
 import React from "react";
+import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
 
 /**
  * Queues component that displays a list of queues.
@@ -12,11 +14,11 @@ import React from "react";
 export default function Queues({ queues }) {
   return (
     <div>
-      <ul>
+      <ButtonGroup orientation="vertical" aria-label="Vertical button group">
         {queues.map((queue, index) => (
-          <li key={index}>{queue.name}</li>
+          <Button key={index}>{queue.name}</Button>
         ))}
-      </ul>
+      </ButtonGroup>
     </div>
   );
 }
