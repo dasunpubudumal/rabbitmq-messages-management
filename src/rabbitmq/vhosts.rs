@@ -69,7 +69,7 @@ pub(crate) struct ResponseForQueryingVhosts {
 /// ```
 pub async fn get_vhosts() -> Result<Vec<ResponseForQueryingVhosts>, ()> {
     let root = &dotenv::var(RABBITMQ_MANAGEMENT_ROOT).expect("RABBITMQ_MANAGEMENT_ROOT not set");
-    let url = prepare_url(&root, "/api/vhosts").unwrap();
+    let url = prepare_url(&root, "api/vhosts").unwrap();
     let vhosts: Vec<RabbitMQVhost> = send_get(&url, Some(&prepare_authorization_headers()))
         .await
         .unwrap();

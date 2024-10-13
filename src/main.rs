@@ -1,4 +1,7 @@
-use routes::queues::{messages, queues};
+use routes::{
+    queues::{messages, queues},
+    vhosts::vhosts,
+};
 
 #[macro_use]
 extern crate rocket;
@@ -10,5 +13,7 @@ mod transport;
 
 #[launch]
 fn rocket() -> _ {
-    rocket::build().mount("/queues", routes![queues, messages])
+    rocket::build()
+        .mount("/queues", routes![queues, messages])
+        .mount("/vhosts", routes![vhosts])
 }

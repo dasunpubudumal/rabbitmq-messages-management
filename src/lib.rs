@@ -76,6 +76,8 @@ where
 
     // Send the request and get the response to a string.
     let request = request_builder.body(()).unwrap();
+    dbg!(&request);
+
     let mut response = isahc::send_async(request).await.unwrap();
     let response_body = response.text().await.unwrap();
 
