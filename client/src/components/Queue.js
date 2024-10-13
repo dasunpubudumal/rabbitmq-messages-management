@@ -8,6 +8,8 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Modal from "@mui/material/Modal";
+import { filterMessages } from "../utilities/messages";
+import JsonMessageViewer from "./JsonMessageViewer";
 
 const style = {
   position: "absolute",
@@ -27,18 +29,65 @@ export default function Queue() {
   const [messages, setMessages] = useState([]);
   const [count, setCount] = useState(0);
 
+  const [jsonMessages, setJsonMessages] = useState([]);
+  const [base64Messages, setBase64Messages] = useState([]);
+  const [stringMessages, setStringMessages] = useState([]);
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  /**
+   * Fetches messages from the specified queue.
+   *
+   * This function fetches messages from the queue based on the provided count.
+   * If the count is zero, it opens a modal. Otherwise, it fetches the messages
+   * from the queue and updates the state with the fetched messages.
+   *
+   * @param {number} count - The number of messages to fetch.
+   */
   const getMessages = async (count) => {
     if (count === 0) {
       handleOpen();
     } else {
       let response = await fetch(`/queues/${vhost}/${queue}?count=1`);
-      setMessages(await response.json());
+      let respMessages = await response.json();
+      setMessages(respMessages);
+      setMessageTypes(respMessages);
     }
   };
 
+  /**
+   * Categorizes and sets messages into different state variables based on their encoding.
+   *
+   * This function processes an array of messages and categorizes them into
+   * three groups using the `filterMessages` utility function:
+   * - JSON messages: Messages with a payload encoding of "string" and valid JSON.
+   * - String messages: Messages with a payload encoding of "string" but invalid JSON.
+   * - Base64 messages: Messages with a payload encoding of "base64".
+   *
+   * The categorized messages are then set into their respective state variables:
+   * - `setJsonMessages`: Updates the state with JSON messages.
+   * - `setBase64Messages`: Updates the state with base64 messages.
+   * - `setStringMessages`: Updates the state with string messages.
+   *
+   * @param {Array} messages - The array of messages to be filtered and categorized.
+   */
+  const setMessageTypes = (messages) => {
+    console.log(messages);
+    const { jsonMessages, stringMessages, base64Messages } =
+      filterMessages(messages);
+    setJsonMessages(jsonMessages);
+    setBase64Messages(base64Messages);
+    setStringMessages(stringMessages);
+  };
+
+  /**
+   * Handles the change event for the count input field.
+   *
+   * This function updates the state with the new count value entered by the user.
+   *
+   * @param {Object} event - The event object from the input field.
+   */
   const handleCountChange = (event) => {
     setCount(event.target.value);
   };
@@ -60,6 +109,8 @@ export default function Queue() {
           </Typography>
         </Box>
       </Modal>
+
+      {/* Card view - Manages user input and statistics of the queue */}
       <Card sx={{ minWidth: 275 }}>
         <CardContent>
           <Typography
@@ -103,6 +154,9 @@ export default function Queue() {
           </Button>
         </CardActions>
       </Card>
+
+      {/* Displays messages */}
+      <JsonMessageViewer messages={jsonMessages} />
     </>
   );
 }

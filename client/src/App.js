@@ -1,7 +1,5 @@
-import JsonView from "@uiw/react-json-view";
 import { useEffect, useState } from "react";
 import { PageContainer } from "@toolpad/core/PageContainer";
-import { Container } from "@mui/material";
 import Queues from "./components/Queues";
 import Vhosts from "./components/Vhosts";
 import { Routes, Route, useNavigate } from "react-router-dom";
@@ -61,23 +59,6 @@ export default function App() {
   const getQueues = async (vhost) => {
     let response = await fetch(`/queues/${vhost}`);
     setQueues(await response.json());
-  };
-
-  /**
-   * Renders a JSON view inside a container.
-   *
-   * This function takes a JSON object as input and returns a JSX element that displays
-   * the JSON object using the `JsonView` component inside a `Container` component.
-   *
-   * @param {Object} values - The JSON object to be displayed.
-   * @returns {JSX.Element} A JSX element containing the JSON view.
-   */
-  const renderJson = (values) => {
-    return (
-      <Container>
-        <JsonView value={values} />
-      </Container>
-    );
   };
 
   return (
