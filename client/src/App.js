@@ -6,6 +6,7 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { PageContainer } from "@toolpad/core/PageContainer";
 import { Container } from "@mui/material";
+import Queues from "./components/Queues";
 
 export default function App() {
   const [vhosts, setVhosts] = useState([]);
@@ -30,8 +31,9 @@ export default function App() {
    * @param {Object} event - The event object from the dropdown menu.
    */
   const handleChange = async (event) => {
-    setSelectedVhost(event.target.value);
-    await getQueues(selectedVhost);
+    const vhost = event.target.value;
+    setSelectedVhost(vhost);
+    await getQueues(vhost);
   };
 
   /**
@@ -83,6 +85,7 @@ export default function App() {
             ))}
           </Select>
         </FormControl>
+        {queues && <Queues queues={queues} />}
       </PageContainer>
     </>
   );
