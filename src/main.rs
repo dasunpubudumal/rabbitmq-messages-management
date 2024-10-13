@@ -1,3 +1,4 @@
+use rocket::fs::FileServer;
 use routes::{
     queues::{messages, queues},
     vhosts::vhosts,
@@ -14,6 +15,7 @@ mod transport;
 #[launch]
 fn rocket() -> _ {
     rocket::build()
+        .mount("/", FileServer::from("./static"))
         .mount("/queues", routes![queues, messages])
         .mount("/vhosts", routes![vhosts])
 }
