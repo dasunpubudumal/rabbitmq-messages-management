@@ -1,6 +1,7 @@
 import React from "react";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
+import { Box, Typography } from "@mui/material";
 
 /**
  * Queues component that displays a list of queues.
@@ -13,17 +14,20 @@ import ButtonGroup from "@mui/material/ButtonGroup";
  */
 export default function Queues({ queues, handleSelectedQueueChange }) {
   return (
-    <div>
+    <>
+      <Box sx={{bt: 4}}></Box>
+      <Typography variant="h5" gutterBottom>Queues</Typography>
       <ButtonGroup orientation="vertical" aria-label="Vertical button group">
         {queues.map((queue, index) => (
           <Button
             key={index}
             onClick={() => handleSelectedQueueChange(queue.name)}
+            color="warning"
           >
             {queue.name}
           </Button>
         ))}
       </ButtonGroup>
-    </div>
+    </>
   );
 }

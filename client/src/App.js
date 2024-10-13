@@ -4,6 +4,7 @@ import Queues from "./components/Queues";
 import Vhosts from "./components/Vhosts";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import Queue from "./components/Queue";
+import { Box } from "@mui/material";
 
 export default function App() {
   const [vhosts, setVhosts] = useState([]);
@@ -63,27 +64,34 @@ export default function App() {
   return (
     <>
       <PageContainer>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <>
-                <Vhosts
-                  selectedVhost={selectedVhost}
-                  handleChange={handleVhostChange}
-                  vhosts={vhosts}
-                />
-                {queues && (
-                  <Queues
-                    queues={queues}
-                    handleSelectedQueueChange={handleSelectedQueueChange}
+        <Box
+        display="flex"
+        flexDirection="column"
+        justifyContent="center"
+        height="90vh" // Full viewport height
+        >
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <>
+                  <Vhosts
+                    selectedVhost={selectedVhost}
+                    handleChange={handleVhostChange}
+                    vhosts={vhosts}
                   />
-                )}
-              </>
-            }
-          />
-          <Route path=":vhost/queues/:queue" element={<Queue />} />
+                  {queues && (
+                    <Queues
+                      queues={queues}
+                      handleSelectedQueueChange={handleSelectedQueueChange}
+                    />
+                  )}
+                </>
+              }
+            />
+            <Route path=":vhost/queues/:queue" element={<Queue />} />
         </Routes>
+        </Box>
       </PageContainer>
     </>
   );
