@@ -83,4 +83,22 @@ const truncateMessage = (message, maxLength) => {
   return message;
 };
 
-export { filterMessages, base64Decode, base64Encode, truncateMessage };
+/**
+ * Downloads the provided messages as a JSON file.
+ * 
+ * This function creates a JSON file from the provided messages and triggers a download
+ * in the user's browser.
+ * 
+ * @param {Array|Object} messages - The messages to be downloaded. This can be an array or an object.
+ */
+const downloadMessages = (messages) => {
+  const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
+      JSON.stringify(messages)
+    )}`;
+  const link = document.createElement("a");
+  link.href = jsonString;
+  link.download = "messages.json";
+  link.click();
+}
+
+export { filterMessages, base64Decode, base64Encode, truncateMessage, downloadMessages };

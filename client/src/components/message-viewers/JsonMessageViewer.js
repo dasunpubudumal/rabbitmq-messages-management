@@ -1,7 +1,11 @@
 import React from "react";
 import JsonView from "@uiw/react-json-view";
-import { Container } from "@mui/material";
-import {Typography} from "@mui/material";
+import { Container, IconButton } from "@mui/material";
+import { Typography } from "@mui/material";
+import {Box} from "@mui/material";
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import { Tooltip } from "@mui/material";
+import {downloadMessages} from "../../utilities/messages"
 
 /**
  * JsonMessageViewer component renders a list of JSON messages using the renderJson function.
@@ -24,12 +28,21 @@ export default function JsonMessageViewer({ messages }) {
     return (
       <Container>
         {messages && messages.length === 0 && <Typography sx={{ color: "text.secondary" }}>No messages</Typography>}
-        <JsonView
+        {messages && messages.length > 0 && <>
+          <JsonView
           value={values}
           collapsed={true}
           displayDataTypes={true}
           displayObjectSize={true}
-        />
+          />
+          <Box display="flex" justifyContent="flex-end" sx={{ mt: 0 }}>
+            <Tooltip title="Download">
+              <IconButton size="large" variant="contained" onClick={() => downloadMessages(messages)} >
+                <FileDownloadIcon color="warning" />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        </>}
       </Container>
     );
   };
