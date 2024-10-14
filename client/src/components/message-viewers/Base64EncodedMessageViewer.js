@@ -39,6 +39,7 @@ export default function Base64EncodedMessageViewer({ messages }) {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [selectedMessage, setSelectedMessage] = useState("");
+  const [decodedMessage, setDecodedMessage] = useState("");
 
   // TODO: Add don't decode messages twice. Decode it once and have it in state.
 
@@ -64,7 +65,7 @@ export default function Base64EncodedMessageViewer({ messages }) {
               Decoded message
             </Typography>
             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-              {base64Decode(selectedMessage)}
+              {decodedMessage}
             </Typography>
             <Box display="flex" justifyContent="flex-end" sx={{ mt: 0 }}>
               <Tooltip title="Download">
@@ -72,7 +73,7 @@ export default function Base64EncodedMessageViewer({ messages }) {
                   size="large"
                   variant="contained"
                   onClick={() =>
-                    downloadMessages(base64Decode(selectedMessage))
+                    downloadMessages(decodedMessage)
                   }
                 >
                   <FileDownloadIcon color="warning" />
@@ -107,6 +108,7 @@ export default function Base64EncodedMessageViewer({ messages }) {
                           onClick={() => {
                             console.log(`Selected message: ${message.payload}`);
                             setSelectedMessage(message.payload);
+                            setDecodedMessage(base64Decode(message.payload));
                             handleOpen();
                           }}
                         >
