@@ -1,6 +1,8 @@
 import * as React from "react";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
+import { Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 /**
  * ReusableAlertComponent
@@ -17,13 +19,17 @@ import AlertTitle from "@mui/material/AlertTitle";
 export default function ReusableAlertComponent({
   severity,
   title,
-  description,
+  type
 }) {
+
+  const navigate = useNavigate();
+
   return (
     <>
-      <Alert severity={severity} sx={{ mb: 4 }}>
+      <Alert severity={severity} action={
+        <Button color={type} size="medium" variant="outlined" onClick={() => navigate("/")}>Back</Button>
+      } sx={{ mb: 4 }}>
         <AlertTitle>{title}</AlertTitle>
-        {description}
       </Alert>
     </>
   );

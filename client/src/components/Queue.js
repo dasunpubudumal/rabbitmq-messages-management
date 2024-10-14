@@ -111,15 +111,15 @@ export default function Queue() {
       {successAlert && (
         <ReusableAlertComponent
           severity="success"
-          title="Messages received"
-          description={`${messages && messages.length} messages received`}
+          title={`${messages && messages.length} messages received`}
+          type="success"
         />
       )}
       {noMessageAlert && (
         <ReusableAlertComponent
           severity="warning"
-          title="No messages received"
-          description="No messages in the queue"
+          title="No messages in the queue"
+          type="warning"
         />
       )}
       <ReusableModal
