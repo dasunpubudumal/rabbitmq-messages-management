@@ -11,7 +11,6 @@ import { filterMessages } from "../utilities/messages";
 import MessageViewer from "./message-viewers/MessageViewer";
 import ReusableModal from "./fragments/ReusableModal";
 import ReusableAlertComponent from "./fragments/ReusableAlertComponent";
-import { List, ListItem } from "@mui/material";
 
 const style = {
   position: "absolute",
