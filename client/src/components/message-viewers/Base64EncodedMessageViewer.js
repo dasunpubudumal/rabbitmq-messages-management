@@ -41,6 +41,8 @@ export default function Base64EncodedMessageViewer({ messages }) {
   const handleClose = () => setOpen(false);
   const [selectedMessage, setSelectedMessage] = useState("");
 
+  // TODO: Add don't decode messages twice. Decode it once and have it in state.
+
   const DecodedMessageModal = () => {
     return (
       <>
