@@ -9,6 +9,7 @@ import LockOpenIcon from "@mui/icons-material/LockOpen";
 import { base64Decode, truncateMessage } from "../../utilities/messages";
 import ReusableModal from "../fragments/ReusableModal";
 import LabelIcon from "@mui/icons-material/Label";
+import { Typography } from "@mui/material";
 
 const style = {
   position: "absolute",
@@ -30,6 +31,7 @@ export default function Base64EncodedMessageViewer({ messages }) {
 
   return (
     <>
+    {messages && messages.length === 0 && <Typography sx={{ color: "text.secondary" }}>No messages</Typography>}
       <ReusableModal
         open={open}
         handleClose={handleClose}

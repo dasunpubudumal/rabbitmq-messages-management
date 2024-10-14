@@ -1,6 +1,7 @@
 import React from "react";
 import JsonView from "@uiw/react-json-view";
 import { Container } from "@mui/material";
+import {Typography} from "@mui/material";
 
 /**
  * JsonMessageViewer component renders a list of JSON messages using the renderJson function.
@@ -22,6 +23,7 @@ export default function JsonMessageViewer({ messages }) {
   const renderJson = (values) => {
     return (
       <Container>
+        {messages && messages.length === 0 && <Typography sx={{ color: "text.secondary" }}>No messages</Typography>}
         <JsonView
           value={values}
           collapsed={true}

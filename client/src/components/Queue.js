@@ -130,7 +130,7 @@ export default function Queue() {
         message="Please provide a message count."
       />
       {/* Card view - Manages user input and statistics of the queue */}
-      <Card sx={{ minWidth: 275 }}>
+      <Card sx={{ minWidth: 275, mb: 5 }}>
         <CardContent>
           <Typography
             variant="h1"
@@ -139,18 +139,14 @@ export default function Queue() {
           >
             Queue Details
           </Typography>
-          <List>
-            <ListItem>
-              <Typography sx={{ color: "text.secondary" }}>
-                - Name: {queue}
-              </Typography>
-            </ListItem>
-            <ListItem>
-              <Typography sx={{ color: "text.secondary" }}>
-                - vhost: {vhost}
-              </Typography>
-            </ListItem>
-          </List>
+          <ul>
+            <li><Typography sx={{ color: "text.secondary" }}>
+              <b>Name:</b> <pre>{queue}</pre>
+            </Typography></li>
+            <li><Typography sx={{ color: "text.secondary" }}>
+              <b>Vhost:</b> <pre>{vhost}</pre>
+            </Typography></li>
+          </ul>
         </CardContent>
         <CardActions>
           <Box
