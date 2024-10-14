@@ -11,6 +11,7 @@ import Typography from "@mui/material/Typography";
 import { Link } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import MuiCard from "@mui/material/Card";
+import CircularProgress from '@mui/material/CircularProgress';
 
 export default function App() {
   const [vhosts, setVhosts] = useState([]);
@@ -18,6 +19,7 @@ export default function App() {
   const [queues, setQueues] = useState([]);
   const [selectedQueue, setSelectedQueue] = useState("");
   const navigate = useNavigate();
+  const [isQueuesLoading, setIsQueuesLoading] = useState(false);
 
   useEffect(() => {
     async function responses() {
@@ -36,6 +38,7 @@ export default function App() {
    * @param {Object} event - The event object from the dropdown menu.
    */
   const handleVhostChange = async (event) => {
+    setIsQueuesLoading(true);
     const vhost = event.target.value;
     setSelectedVhost(vhost);
     await getQueues(vhost);
@@ -65,6 +68,7 @@ export default function App() {
   const getQueues = async (vhost) => {
     let response = await fetch(`/queues/${vhost}`);
     setQueues(await response.json());
+    setIsQueuesLoading(false);
   };
 
   const Card = styled(MuiCard)(({ theme }) => ({
@@ -127,6 +131,7 @@ export default function App() {
                         handleChange={handleVhostChange}
                         vhosts={vhosts}
                       />
+                      {isQueuesLoading && <CircularProgress />}
                       {queues && (
                         <Queues
                           queues={queues}
