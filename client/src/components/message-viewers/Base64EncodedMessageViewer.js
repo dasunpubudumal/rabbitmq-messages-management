@@ -43,6 +43,14 @@ export default function Base64EncodedMessageViewer({ messages }) {
 
   // TODO: Add don't decode messages twice. Decode it once and have it in state.
 
+  /**
+   * DecodedMessageModal
+   *
+   * This component renders a modal that displays a decoded base64 message.
+   * It also provides an option to download the decoded message.
+   *
+   * @returns {JSX.Element} The rendered modal component.
+   */
   const DecodedMessageModal = () => {
     return (
       <>
