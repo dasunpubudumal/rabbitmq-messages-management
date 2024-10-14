@@ -7,7 +7,6 @@ import IconButton from "@mui/material/IconButton";
 import ListItemText from "@mui/material/ListItemText";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import { base64Decode, truncateMessage } from "../../utilities/messages";
-import ReusableModal from "../fragments/ReusableModal";
 import LabelIcon from "@mui/icons-material/Label";
 import { Typography } from "@mui/material";
 import { Modal } from "@mui/material";
