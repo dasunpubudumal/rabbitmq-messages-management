@@ -114,6 +114,7 @@ pub(crate) struct BackingQueueStatus {
     /// Average ingress rate.
     avg_ingress_rate: f64,
     /// Delta values.
+    #[serde(skip_deserializing)]
     delta: (String, u64, u64, u64, u64),
     /// Length of the queue.
     len: u64,
