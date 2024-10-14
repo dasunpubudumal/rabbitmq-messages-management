@@ -7,16 +7,10 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
 import { filterMessages } from "../utilities/messages";
 import MessageViewer from "./message-viewers/MessageViewer";
 import ReusableModal from "./fragments/ReusableModal";
+import ReusableAlertComponent from "./fragments/ReusableAlertComponent";
 import { List, ListItem } from "@mui/material";
 
 const style = {
@@ -36,11 +30,13 @@ export default function Queue() {
   const { vhost, queue } = useParams();
   const [messages, setMessages] = useState([]);
   const [count, setCount] = useState(0);
-
+  const [successAlert, setSuccessAlert] = useState(false);
+  const [noMessageAlert, setNoMessageAlert] = useState(false);
   const [jsonMessages, setJsonMessages] = useState([]);
   const [base64Messages, setBase64Messages] = useState([]);
   const [stringMessages, setStringMessages] = useState([]);
 
+  // Modal functions
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
@@ -54,6 +50,8 @@ export default function Queue() {
    * @param {number} count - The number of messages to fetch.
    */
   const getMessages = async (count) => {
+    setSuccessAlert(false);
+    setNoMessageAlert(false);
     if (count === 0) {
       handleOpen();
     } else {
@@ -86,6 +84,15 @@ export default function Queue() {
     setJsonMessages(jsonMessages);
     setBase64Messages(base64Messages);
     setStringMessages(stringMessages);
+    if (
+      jsonMessages.length === 0 &&
+      stringMessages.length === 0 &&
+      base64Messages.length === 0
+    ) {
+      setNoMessageAlert(true);
+    } else {
+      setSuccessAlert(true);
+    }
   };
 
   /**
@@ -101,6 +108,20 @@ export default function Queue() {
 
   return (
     <>
+      {successAlert && (
+        <ReusableAlertComponent
+          severity="success"
+          title="Messages received"
+          description={`${messages && messages.length} messages received`}
+        />
+      )}
+      {noMessageAlert && (
+        <ReusableAlertComponent
+          severity="warning"
+          title="No messages received"
+          description="No messages in the queue"
+        />
+      )}
       <ReusableModal
         open={open}
         handleClose={handleClose}
@@ -108,7 +129,6 @@ export default function Queue() {
         title="Incorrect message count"
         message="Please provide a message count."
       />
-
       {/* Card view - Manages user input and statistics of the queue */}
       <Card sx={{ minWidth: 275 }}>
         <CardContent>
