@@ -7,10 +7,17 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
-import Modal from "@mui/material/Modal";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
 import { filterMessages } from "../utilities/messages";
 import MessageViewer from "./message-viewers/MessageViewer";
 import ReusableModal from "./fragments/ReusableModal";
+import { List, ListItem } from "@mui/material";
 
 const style = {
   position: "absolute",
@@ -106,17 +113,24 @@ export default function Queue() {
       <Card sx={{ minWidth: 275 }}>
         <CardContent>
           <Typography
+            variant="h1"
             gutterBottom
-            sx={{ color: "text.secondary", fontSize: 14 }}
+            sx={{ color: "text.primary", fontSize: 18 }}
           >
             Queue Details
           </Typography>
-          <Typography sx={{ color: "text.secondary", mb: 1.5 }}>
-            Name: {queue}
-          </Typography>
-          <Typography sx={{ color: "text.secondary", mb: 1.5 }}>
-            vhost: {vhost}
-          </Typography>
+          <List>
+            <ListItem>
+              <Typography sx={{ color: "text.secondary" }}>
+                - Name: {queue}
+              </Typography>
+            </ListItem>
+            <ListItem>
+              <Typography sx={{ color: "text.secondary" }}>
+                - vhost: {vhost}
+              </Typography>
+            </ListItem>
+          </List>
         </CardContent>
         <CardActions>
           <Box
@@ -140,6 +154,7 @@ export default function Queue() {
           </Box>
           <Button
             variant="contained"
+            color="warning"
             onClick={async () => {
               await getMessages(count);
             }}

@@ -30,7 +30,6 @@ export default function Queues({ queues, handleSelectedQueueChange }) {
                   key={index}
                   onClick={() => handleSelectedQueueChange(queue.name)}
                   color="warning"
-                  variant="contained"
                 >
                   {queue.name}
                 </Button>

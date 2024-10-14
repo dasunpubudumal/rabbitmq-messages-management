@@ -18,7 +18,11 @@ export default function Vhosts({ selectedVhost, handleChange, vhosts }) {
             onChange={handleChange}
             style={{ minWidth: 200 }}
             sx={{ backgroundColor: "white" }}
+            displayEmpty
           >
+            <MenuItem value="" disabled>
+              Select a Vhost
+            </MenuItem>
             {vhosts.map((vhost, index) => (
               <MenuItem value={vhost.name} key={index}>
                 {vhost.name}

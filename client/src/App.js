@@ -5,11 +5,12 @@ import Vhosts from "./components/Vhosts";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import Queue from "./components/Queue";
 import { Box } from "@mui/material";
-
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { Link } from "react-router-dom";
+import { styled } from "@mui/material/styles";
+import MuiCard from "@mui/material/Card";
 
 export default function App() {
   const [vhosts, setVhosts] = useState([]);
@@ -66,6 +67,25 @@ export default function App() {
     setQueues(await response.json());
   };
 
+  const Card = styled(MuiCard)(({ theme }) => ({
+    display: "flex",
+    flexDirection: "column",
+    alignSelf: "center",
+    width: "100%",
+    padding: theme.spacing(4),
+    gap: theme.spacing(2),
+    margin: "auto",
+    [theme.breakpoints.up("sm")]: {
+      maxWidth: "450px",
+    },
+    boxShadow:
+      "hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px, hsla(220, 20%, 15%, 0.1) 0px 25px 45px -10px, hsla(220, 15%, 20%, 0.15) 0px 35px 55px -15px",
+    ...theme.applyStyles("dark", {
+      boxShadow:
+        "hsla(220, 30%, 5%, 0.5) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.08) 0px 15px 35px -5px, hsla(220, 20%, 15%, 0.12) 0px 25px 45px -10px, hsla(220, 15%, 20%, 0.18) 0px 35px 55px -15px",
+    }),
+  }));
+
   return (
     <>
       <Box
@@ -78,7 +98,12 @@ export default function App() {
           <AppBar position="static" color="warning">
             <Toolbar>
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                  <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>RabbitMQ Message Viewer</Link>
+                <Link
+                  to="/"
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  RabbitMQ Message Viewer
+                </Link>
               </Typography>
             </Toolbar>
           </AppBar>
@@ -96,17 +121,19 @@ export default function App() {
                 path="/"
                 element={
                   <>
-                    <Vhosts
-                      selectedVhost={selectedVhost}
-                      handleChange={handleVhostChange}
-                      vhosts={vhosts}
-                    />
-                    {queues && (
-                      <Queues
-                        queues={queues}
-                        handleSelectedQueueChange={handleSelectedQueueChange}
+                    <Card variant="outlined">
+                      <Vhosts
+                        selectedVhost={selectedVhost}
+                        handleChange={handleVhostChange}
+                        vhosts={vhosts}
                       />
-                    )}
+                      {queues && (
+                        <Queues
+                          queues={queues}
+                          handleSelectedQueueChange={handleSelectedQueueChange}
+                        />
+                      )}
+                    </Card>
                   </>
                 }
               />
