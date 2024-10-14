@@ -31,7 +31,9 @@ export default function Base64EncodedMessageViewer({ messages }) {
 
   return (
     <>
-    {messages && messages.length === 0 && <Typography sx={{ color: "text.secondary" }}>No messages</Typography>}
+      {messages && messages.length === 0 && (
+        <Typography sx={{ color: "text.secondary" }}>No messages</Typography>
+      )}
       <ReusableModal
         open={open}
         handleClose={handleClose}

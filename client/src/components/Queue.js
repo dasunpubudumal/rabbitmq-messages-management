@@ -139,12 +139,16 @@ export default function Queue() {
             Queue Details
           </Typography>
           <ul>
-            <li><Typography sx={{ color: "text.secondary" }}>
-              <b>Name:</b> <pre>{queue}</pre>
-            </Typography></li>
-            <li><Typography sx={{ color: "text.secondary" }}>
-              <b>Vhost:</b> <pre>{vhost}</pre>
-            </Typography></li>
+            <li>
+              <Typography sx={{ color: "text.secondary" }}>
+                <b>Name:</b> <pre>{queue}</pre>
+              </Typography>
+            </li>
+            <li>
+              <Typography sx={{ color: "text.secondary" }}>
+                <b>Vhost:</b> <pre>{vhost}</pre>
+              </Typography>
+            </li>
           </ul>
         </CardContent>
         <CardActions>

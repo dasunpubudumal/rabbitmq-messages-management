@@ -16,19 +16,25 @@ import { useNavigate } from "react-router-dom";
  *
  * @returns {JSX.Element} The rendered alert component.
  */
-export default function ReusableAlertComponent({
-  severity,
-  title,
-  type
-}) {
-
+export default function ReusableAlertComponent({ severity, title, type }) {
   const navigate = useNavigate();
 
   return (
     <>
-      <Alert severity={severity} action={
-        <Button color={type} size="medium" variant="outlined" onClick={() => navigate("/")}>Back</Button>
-      } sx={{ mb: 4 }}>
+      <Alert
+        severity={severity}
+        action={
+          <Button
+            color={type}
+            size="medium"
+            variant="outlined"
+            onClick={() => navigate("/")}
+          >
+            Back
+          </Button>
+        }
+        sx={{ mb: 4 }}
+      >
         <AlertTitle>{title}</AlertTitle>
       </Alert>
     </>
