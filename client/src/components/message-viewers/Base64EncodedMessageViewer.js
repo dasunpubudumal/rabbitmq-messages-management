@@ -40,7 +40,7 @@ export default function Base64EncodedMessageViewer({ messages }) {
   const handleClose = () => setOpen(false);
   const [selectedMessage, setSelectedMessage] = useState("");
   const [decodedMessage, setDecodedMessage] = useState("");
-  
+
   /**
    * DecodedMessageModal
    *
@@ -70,9 +70,7 @@ export default function Base64EncodedMessageViewer({ messages }) {
                 <IconButton
                   size="large"
                   variant="contained"
-                  onClick={() =>
-                    downloadMessages(decodedMessage)
-                  }
+                  onClick={() => downloadMessages(decodedMessage)}
                 >
                   <FileDownloadIcon color="warning" />
                 </IconButton>
