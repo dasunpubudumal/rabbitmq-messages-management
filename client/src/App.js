@@ -14,6 +14,7 @@ import MuiCard from "@mui/material/Card";
 import CircularProgress from "@mui/material/CircularProgress";
 import Fab from "@mui/material/Fab";
 import AddIcon from "@mui/icons-material/Add";
+import RabbitAppBar from "./components/fragments/RabbitAppBar";
 
 export default function App() {
   const [vhosts, setVhosts] = useState([]);
@@ -100,20 +101,7 @@ export default function App() {
             "linear-gradient(to bottom right, orange, #f07926, #ff9600, #ffb74d, white)",
         }}
       >
-        <Box>
-          <AppBar position="static" color="warning">
-            <Toolbar>
-              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                <Link
-                  to="/"
-                  style={{ textDecoration: "none", color: "inherit" }}
-                >
-                  RabbitMQ Message Viewer
-                </Link>
-              </Typography>
-            </Toolbar>
-          </AppBar>
-        </Box>
+        <RabbitAppBar />
 
         <PageContainer>
           <Box
