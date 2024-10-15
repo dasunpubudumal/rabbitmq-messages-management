@@ -129,7 +129,7 @@ export default function Queue() {
         message="Please provide a message count."
       />
       {/* Card view - Manages user input and statistics of the queue */}
-      <Card sx={{ minWidth: 275, mb: 5 }}>
+      <Card sx={{ minWidth: 275, mb: 5, overflowY: 'auto' }}>
         <CardContent>
           <Typography
             variant="h1"
