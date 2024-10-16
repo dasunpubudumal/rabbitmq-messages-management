@@ -8,6 +8,7 @@ use serde::Deserialize;
 use std::collections::HashMap;
 
 pub mod constants;
+pub mod exceptions;
 
 use constants::{RABBITMQ_MANAGEMENT_PASSWORD, RABBITMQ_MANAGEMENT_USERNAME};
 

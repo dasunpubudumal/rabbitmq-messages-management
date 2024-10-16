@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use dotenv::dotenv;
+use rabbitmq_messages_management::exceptions::ServerError;
 use rabbitmq_messages_management::{
     constants::RABBITMQ_MANAGEMENT_ROOT, prepare_authorization_headers, prepare_url, send_get,
 };
@@ -67,19 +67,19 @@ pub(crate) struct ResponseForQueryingVhosts {
 ///     }
 /// }
 /// ```
-pub async fn get_vhosts() -> Result<Vec<ResponseForQueryingVhosts>, ()> {
+pub async fn get_vhosts() -> Result<Vec<ResponseForQueryingVhosts>, ServerError> {
     let root = &dotenv::var(RABBITMQ_MANAGEMENT_ROOT).expect("RABBITMQ_MANAGEMENT_ROOT not set");
     let url = prepare_url(&root, "api/vhosts").unwrap();
-    let vhosts: Vec<RabbitMQVhost> = send_get(&url, Some(&prepare_authorization_headers()))
-        .await
-        .unwrap();
+    let vhost_responses: Result<Vec<RabbitMQVhost>, ()> =
+        send_get(&url, Some(&prepare_authorization_headers())).await;
 
-    let response: Vec<ResponseForQueryingVhosts> = vhosts
-        .iter()
-        .map(|vhost| ResponseForQueryingVhosts {
-            name: vhost.name.clone(),
-        })
-        .collect();
-
-    Ok(response)
+    match vhost_responses {
+        Ok(vhosts) => Ok(vhosts
+            .iter()
+            .map(|vhost| ResponseForQueryingVhosts {
+                name: vhost.name.clone(),
+            })
+            .collect()),
+        Err(e) => Err(ServerError::new(format!("{:?}", e))),
+    }
 }

@@ -2,8 +2,9 @@ use std::collections::HashMap;
 
 use crate::constants::RABBITMQ_MANAGEMENT_ROOT;
 use rabbitmq_messages_management::{
-    prepare_authorization_headers, prepare_url, send_get, send_post,
+    exceptions::ServerError, prepare_authorization_headers, prepare_url, send_get, send_post,
 };
+use rocket::http::hyper::server::Server;
 use serde::{Deserialize, Serialize};
 
 // Represents a RabbitMQ queue.
@@ -264,14 +265,16 @@ pub struct ResponseForQueryingMessages {
 /// }
 /// # }
 /// ```
-pub async fn get_queue_for_vhost(vhost: &str) -> Result<Vec<Queue>, ()> {
-    // TODO: Error handling
+pub async fn get_queue_for_vhost(vhost: &str) -> Result<Vec<Queue>, ServerError> {
     let root = &dotenv::var(RABBITMQ_MANAGEMENT_ROOT).expect("RABBITMQ_MANAGEMENT_ROOT not set");
     let url = prepare_url(root, &format!("api/queues/{}", vhost)).unwrap();
-    let queues: Vec<Queue> = send_get(&url, Some(&prepare_authorization_headers()))
-        .await
-        .unwrap();
-    Ok(queues)
+    let queues_response: Result<Vec<Queue>, ()> =
+        send_get(&url, Some(&prepare_authorization_headers())).await;
+
+    match queues_response {
+        Ok(queues) => Ok(queues),
+        Err(e) => Err(ServerError::new(format!("{:?}", e))),
+    }
 }
 
 /// Retrieves messages from a specified queue in a given virtual host.
@@ -316,7 +319,7 @@ pub async fn get_messages_from_a_queue(
     vhost: String,
     queue_name: String,
     count: u64,
-) -> Result<Vec<ResponseForQueryingMessages>, ()> {
+) -> Result<Vec<ResponseForQueryingMessages>, ServerError> {
     let root = &dotenv::var(RABBITMQ_MANAGEMENT_ROOT).expect("RABBITMQ_MANAGEMENT_ROOT not set");
     let url = prepare_url(root, &format!("api/queues/{}/{}/get", vhost, queue_name)).unwrap();
     let request = MessageRetrievalRequest {
@@ -339,21 +342,22 @@ pub async fn get_messages_from_a_queue(
     // Therefore, if the request body is not of type `&[u8]`, `&str`, `()`, `Vec<u8>`, or `std::string::String`
     //  make sure you implement it for the request body you're setting.
     // I suggest use serde_json::to_string to convert the struct to a string and use it as a body.
-    let messages: Vec<RabbitMQMessage> = send_post(
+
+    let messages_response: Result<Vec<RabbitMQMessage>, ()> = send_post(
         &url,
         Some(&prepare_authorization_headers()),
         serde_json::to_string(&request).unwrap(),
     )
-    .await
-    .unwrap();
+    .await;
 
-    let payloads: Vec<ResponseForQueryingMessages> = messages
-        .iter()
-        .map(|message| ResponseForQueryingMessages {
-            payload: message.payload.clone(),
-            payload_encoding: message.payload_encoding.clone(),
-        })
-        .collect();
-
-    Ok(payloads)
+    match messages_response {
+        Ok(messages) => Ok(messages
+            .iter()
+            .map(|message| ResponseForQueryingMessages {
+                payload: message.payload.clone(),
+                payload_encoding: message.payload_encoding.clone(),
+            })
+            .collect()),
+        Err(e) => Err(ServerError::new(format!("{:?}", e))),
+    }
 }
