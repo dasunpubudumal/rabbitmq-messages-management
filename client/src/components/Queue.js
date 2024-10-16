@@ -54,7 +54,7 @@ export default function Queue() {
     if (count === 0) {
       handleOpen();
     } else {
-      let response = await fetch(`/queues/${vhost}/${queue}?count=1`);
+      let response = await fetch(`/queues/${vhost}/${queue}?count=${count}`);
       let respMessages = await response.json();
       setMessages(respMessages);
       setMessageTypes(respMessages);
