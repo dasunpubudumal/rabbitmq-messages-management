@@ -4,7 +4,6 @@ use crate::constants::RABBITMQ_MANAGEMENT_ROOT;
 use rabbitmq_messages_management::{
     exceptions::ServerError, prepare_authorization_headers, prepare_url, send_get, send_post,
 };
-use rocket::http::hyper::server::Server;
 use serde::{Deserialize, Serialize};
 
 // Represents a RabbitMQ queue.
