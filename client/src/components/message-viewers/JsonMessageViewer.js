@@ -43,7 +43,7 @@ export default function JsonMessageViewer({ messages }) {
                 <IconButton
                   size="large"
                   variant="contained"
-                  onClick={() => downloadMessages(messages)}
+                  onClick={() => downloadMessages(messages, "data.json")}
                 >
                   <FileDownloadIcon color="warning" />
                 </IconButton>
