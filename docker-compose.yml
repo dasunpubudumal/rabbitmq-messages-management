@@ -1,7 +1,5 @@
 version: '3.8'
 
-# docker-compose up --build -e ROCKET_ADDRESS=0.0.0.0 -e ROCKET_PORT=8088 -e RABBITMQ_MANAGEMENT_USERNAME=alice RABBITMQ_MANAGEMENT_PASSWORD=asdas RABBITMQ_MANAGEMENT_ROOT=http://localhost:15672
-
 services:
   app:
     build:
