@@ -4,9 +4,7 @@ import {
   Toolbar,
   Typography,
   IconButton,
-  SvgIcon,
 } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
 import { Link } from "react-router-dom";
 
 export default function RabbitAppBar() {
