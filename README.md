@@ -6,26 +6,7 @@ Connects to a given RabbitMQ instance and allows to view messages.
 
 ### Setting up the dependencies
 
-For local development, set up a Docker container with RabbitMQ running. Use the following compose file.
-
-```yml
-version: '3'
-services:
-  rabbitmq:
-    image: rabbitmq:3-management
-    container_name: rabbitmq
-    ports:
-      - "5672:5672"   # RabbitMQ port
-      - "15672:15672" # Management console port
-    environment:
-      RABBITMQ_DEFAULT_USER: user  # Default username
-      RABBITMQ_DEFAULT_PASS: password  # Default password
-    volumes:
-      - rabbitmq_data:/var/lib/rabbitmq  # Persist data
-
-volumes:
-  rabbitmq_data:
-```
+For local development, set up a Docker container with RabbitMQ running. Use the compose file in `dependencies` directory to set one up. 
 
 ### Setting up the application
 
