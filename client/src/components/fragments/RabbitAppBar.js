@@ -1,4 +1,11 @@
-import { Box, AppBar, Toolbar, Typography, IconButton, SvgIcon } from "@mui/material";
+import {
+  Box,
+  AppBar,
+  Toolbar,
+  Typography,
+  IconButton,
+  SvgIcon,
+} from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Link } from "react-router-dom";
 
@@ -15,7 +22,11 @@ export default function RabbitAppBar() {
               aria-label="menu"
               sx={{ mr: 2 }}
             >
-              <img src="favicon.ico" alt="Custom Icon" style={{ width: 24, height: 24 }} />
+              <img
+                src="favicon.ico"
+                alt="Custom Icon"
+                style={{ width: 24, height: 24 }}
+              />
             </IconButton>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>

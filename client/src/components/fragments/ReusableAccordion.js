@@ -15,7 +15,7 @@ import Typography from "@mui/material/Typography";
  */
 export default function ReusableAccordion({ title, ChildComponent, messages }) {
   return (
-    <Accordion sx={{overflowY: 'auto', maxHeight: 500}}>
+    <Accordion sx={{ overflowY: "auto", maxHeight: 500 }}>
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1-content"
