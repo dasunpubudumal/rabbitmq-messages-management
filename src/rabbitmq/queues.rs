@@ -106,32 +106,32 @@ pub(crate) struct Arguments {}
 #[derive(Serialize, Deserialize, Debug)]
 pub(crate) struct BackingQueueStatus {
     /// Average egress rate for acknowledgments.
-    avg_ack_egress_rate: f64,
+    avg_ack_egress_rate: Option<f64>,
     /// Average ingress rate for acknowledgments.
-    avg_ack_ingress_rate: f64,
+    avg_ack_ingress_rate: Option<f64>,
     /// Average egress rate.
-    avg_egress_rate: f64,
+    avg_egress_rate: Option<f64>,
     /// Average ingress rate.
-    avg_ingress_rate: f64,
+    avg_ingress_rate: Option<f64>,
     /// Delta values.
     #[serde(skip_deserializing)]
     delta: (String, u64, u64, u64, u64),
     /// Length of the queue.
-    len: u64,
+    len: Option<u64>,
     /// Mode of the queue.
-    mode: String,
+    mode: Option<String>,
     /// Next sequence ID.
-    next_seq_id: u64,
+    next_seq_id: Option<u64>,
     /// Q1 value.
-    q1: u64,
+    q1: Option<u64>,
     /// Q2 value.
-    q2: u64,
+    q2: Option<u64>,
     /// Q3 value.
-    q3: u64,
+    q3: Option<u64>,
     /// Q4 value.
-    q4: u64,
+    q4: Option<u64>,
     /// Target RAM count.
-    target_ram_count: String,
+    target_ram_count: Option<String>,
 }
 
 /// Represents the effective policy definition for a RabbitMQ queue.
@@ -144,15 +144,15 @@ pub(crate) struct EffectivePolicyDefinition {}
 #[serde(crate = "rocket::serde")]
 pub(crate) struct GarbageCollection {
     /// Full sweep after this many collections.
-    fullsweep_after: u64,
+    fullsweep_after: Option<u64>,
     /// Maximum heap size.
-    max_heap_size: u64,
+    max_heap_size: Option<u64>,
     /// Minimum binary virtual heap size.
-    min_bin_vheap_size: u64,
+    min_bin_vheap_size: Option<u64>,
     /// Minimum heap size.
-    min_heap_size: u64,
+    min_heap_size: Option<u64>,
     /// Number of minor garbage collections.
-    minor_gcs: u64,
+    minor_gcs: Option<u64>,
 }
 
 /// Represents the details of messages in a RabbitMQ queue.
@@ -160,7 +160,7 @@ pub(crate) struct GarbageCollection {
 #[serde(crate = "rocket::serde")]
 pub(crate) struct MessageDetails {
     /// Rate of messages.
-    rate: f64,
+    rate: Option<f64>,
 }
 
 /// Represents the details of reductions in a RabbitMQ queue.
@@ -168,7 +168,7 @@ pub(crate) struct MessageDetails {
 #[serde(crate = "rocket::serde")]
 pub(crate) struct ReductionsDetails {
     /// Rate of reductions.
-    rate: f64,
+    rate: Option<f64>,
 }
 
 /// Represents the request for retrieving messages from a queue
@@ -196,9 +196,9 @@ pub struct Properties {
     /// Priority of the message.
     priority: Option<u8>,
     /// Delivery mode of the message.
-    delivery_mode: u8,
+    delivery_mode: Option<u8>,
     /// Headers associated with the message.
-    headers: HashMap<String, serde_json::Value>,
+    headers: Option<HashMap<String, serde_json::Value>>,
     /// Content type of the message.
     content_type: Option<String>,
 }
