@@ -24,6 +24,11 @@ const style = {
   p: 4,
 };
 
+/**
+ * Displays the queues within a given vhost and contains message display component.
+ * 
+ * @returns {JSX.Element} The rendered Queue component.
+ */
 export default function Queue() {
   const [open, setOpen] = useState(false);
   const { vhost, queue } = useParams();

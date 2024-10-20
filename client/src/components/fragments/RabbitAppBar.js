@@ -4,8 +4,42 @@ import { Link, useNavigate } from "react-router-dom";
 
 const pages = ["Publish Messages"];
 
+/**
+ * RabbitAppBar Component
+ * 
+ * A functional component that renders an application bar for the RabbitMQ 
+ * Message Viewer. The AppBar includes a logo, the application title as a 
+ * link to the homepage, and a series of navigation buttons based on a 
+ * predefined list of pages.
+ * 
+ * Features:
+ * - Displays a custom logo as an icon button.
+ * - Provides a title that links to the home page.
+ * - Dynamically generates navigation buttons from an array of pages.
+ * 
+ * Usage:
+ * Import and use the component within a parent component, ensuring that
+ * the `pages` array is defined in the parent scope.
+ * 
+ * Example:
+ * 
+ * ```jsx
+ * import RabbitAppBar from './RabbitAppBar';
+ * 
+ * function App() {
+ *   const pages = ['Home', 'Settings', 'Logs'];
+ *   return (
+ *     <div>
+ *       <RabbitAppBar pages={pages} />
+ *       // Other components
+ *     </div>
+ *   );
+ * }
+ * ```
+ * 
+ * @returns {JSX.Element} The rendered AppBar component.
+ */
 export default function RabbitAppBar() {
-  const navigate = useNavigate();
   const handleCloseNavMenu = () => {};
 
   return (
