@@ -5,16 +5,11 @@ import Vhosts from "./components/Vhosts";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import Queue from "./components/Queue";
 import { Box } from "@mui/material";
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import { Link } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import MuiCard from "@mui/material/Card";
 import CircularProgress from "@mui/material/CircularProgress";
-import Fab from "@mui/material/Fab";
-import AddIcon from "@mui/icons-material/Add";
 import RabbitAppBar from "./components/fragments/RabbitAppBar";
+import MessagePublisher from "./components/MessagePublisher";
 
 export default function App() {
   const [vhosts, setVhosts] = useState([]);
@@ -133,6 +128,10 @@ export default function App() {
                 }
               />
               <Route path=":vhost/queues/:queue" element={<Queue />} />
+              <Route
+                path="exchanges"
+                element={<MessagePublisher vhosts={vhosts} />}
+              />
             </Routes>
           </Box>
         </PageContainer>

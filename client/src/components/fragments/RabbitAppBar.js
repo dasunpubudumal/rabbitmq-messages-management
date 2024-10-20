@@ -1,13 +1,13 @@
-import {
-  Box,
-  AppBar,
-  Toolbar,
-  Typography,
-  IconButton,
-} from "@mui/material";
-import { Link } from "react-router-dom";
+import { Box, AppBar, Toolbar, Typography, IconButton } from "@mui/material";
+import { Button } from "@mui/material";
+import { Link, useNavigate } from "react-router-dom";
+
+const pages = ["Publish Messages"];
 
 export default function RabbitAppBar() {
+  const navigate = useNavigate();
+  const handleCloseNavMenu = () => {};
+
   return (
     <>
       <Box>
@@ -31,6 +31,15 @@ export default function RabbitAppBar() {
                 RabbitMQ Message Viewer
               </Link>
             </Typography>
+            {pages.map((page) => (
+              <Button
+                key={page}
+                onClick={handleCloseNavMenu}
+                sx={{ my: 2, color: "white", display: "block" }}
+              >
+                {page}
+              </Button>
+            ))}
           </Toolbar>
         </AppBar>
       </Box>
