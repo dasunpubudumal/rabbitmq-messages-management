@@ -11,67 +11,67 @@ use serde::{Deserialize, Serialize};
 #[serde(crate = "rocket::serde")]
 pub(crate) struct Queue {
     /// Arguments for the queue.
-    arguments: Arguments,
+    arguments: Option<Arguments>,
     /// Indicates if the queue is auto-deleted when no longer used.
-    auto_delete: bool,
+    auto_delete: Option<bool>,
     /// Status of the backing queue.
-    backing_queue_status: BackingQueueStatus,
+    backing_queue_status: Option<BackingQueueStatus>,
     /// Capacity of the consumer.
-    consumer_capacity: f64,
+    consumer_capacity: Option<f64>,
     /// Utilization of the consumer.
-    consumer_utilisation: f64,
+    consumer_utilisation: Option<f64>,
     /// Number of consumers.
-    consumers: u64,
+    consumers: Option<u64>,
     /// Indicates if the queue is durable.
-    durable: bool,
+    durable: Option<bool>,
     /// Effective policy definition for the queue.
-    effective_policy_definition: EffectivePolicyDefinition,
+    effective_policy_definition: Option<EffectivePolicyDefinition>,
     /// Indicates if the queue is exclusive.
-    exclusive: bool,
+    exclusive: Option<bool>,
     /// Tag of the exclusive consumer, if any.
     exclusive_consumer_tag: Option<String>,
     /// Garbage collection settings for the queue.
-    garbage_collection: GarbageCollection,
+    garbage_collection: Option<GarbageCollection>,
     /// Timestamp of the head message, if any.
     head_message_timestamp: Option<String>,
     /// Time since the queue has been idle.
-    idle_since: String,
+    idle_since: Option<String>,
     /// Memory used by the queue.
-    memory: u64,
+    memory: Option<u64>,
     /// Total bytes of messages in the queue.
-    message_bytes: u64,
+    message_bytes: Option<u64>,
     /// Bytes of messages paged out.
-    message_bytes_paged_out: u64,
+    message_bytes_paged_out: Option<u64>,
     /// Bytes of persistent messages.
-    message_bytes_persistent: u64,
+    message_bytes_persistent: Option<u64>,
     /// Bytes of messages in RAM.
-    message_bytes_ram: u64,
+    message_bytes_ram: Option<u64>,
     /// Bytes of ready messages.
-    message_bytes_ready: u64,
+    message_bytes_ready: Option<u64>,
     /// Bytes of unacknowledged messages.
-    message_bytes_unacknowledged: u64,
+    message_bytes_unacknowledged: Option<u64>,
     /// Total number of messages in the queue.
-    messages: u64,
+    messages: Option<u64>,
     /// Details of the messages.
-    messages_details: MessageDetails,
+    messages_details: Option<MessageDetails>,
     /// Number of messages paged out.
-    messages_paged_out: u64,
+    messages_paged_out: Option<u64>,
     /// Number of persistent messages.
-    messages_persistent: u64,
+    messages_persistent: Option<u64>,
     /// Number of messages in RAM.
-    messages_ram: u64,
+    messages_ram: Option<u64>,
     /// Number of ready messages.
-    messages_ready: u64,
+    messages_ready: Option<u64>,
     /// Details of the ready messages.
-    messages_ready_details: MessageDetails,
+    messages_ready_details: Option<MessageDetails>,
     /// Number of ready messages in RAM.
-    messages_ready_ram: u64,
+    messages_ready_ram: Option<u64>,
     /// Number of unacknowledged messages.
-    messages_unacknowledged: u64,
+    messages_unacknowledged: Option<u64>,
     /// Details of the unacknowledged messages.
-    messages_unacknowledged_details: MessageDetails,
+    messages_unacknowledged_details: Option<MessageDetails>,
     /// Number of unacknowledged messages in RAM.
-    messages_unacknowledged_ram: u64,
+    messages_unacknowledged_ram: Option<u64>,
     /// Name of the queue.
     name: String,
     /// Node where the queue is located.
@@ -83,9 +83,9 @@ pub(crate) struct Queue {
     /// Recoverable slaves for the queue, if any.
     recoverable_slaves: Option<String>,
     /// Number of reductions.
-    reductions: u64,
+    reductions: Option<u64>,
     /// Details of the reductions.
-    reductions_details: ReductionsDetails,
+    reductions_details: Option<ReductionsDetails>,
     /// Tag of the single active consumer, if any.
     single_active_consumer_tag: Option<String>,
     /// State of the queue.
