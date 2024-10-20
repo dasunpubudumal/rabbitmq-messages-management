@@ -73,9 +73,9 @@ pub(crate) struct Queue {
     /// Number of unacknowledged messages in RAM.
     messages_unacknowledged_ram: Option<u64>,
     /// Name of the queue.
-    name: String,
+    name: Option<String>,
     /// Node where the queue is located.
-    node: String,
+    node: Option<String>,
     /// Operator policy for the queue, if any.
     operator_policy: Option<String>,
     /// Policy for the queue, if any.
@@ -89,12 +89,12 @@ pub(crate) struct Queue {
     /// Tag of the single active consumer, if any.
     single_active_consumer_tag: Option<String>,
     /// State of the queue.
-    state: String,
+    state: Option<String>,
     /// Type of the queue.
     #[serde(rename = "type")]
-    queue_type: String,
+    queue_type: Option<String>,
     /// Virtual host of the queue.
-    vhost: String,
+    vhost: Option<String>,
 }
 
 /// Represents the arguments for a RabbitMQ queue.
