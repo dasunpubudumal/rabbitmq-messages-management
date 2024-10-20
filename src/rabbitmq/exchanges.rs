@@ -11,6 +11,7 @@ use serde::{Deserialize, Serialize};
 #[serde(crate = "rocket::serde")]
 pub(crate) struct Exchange {
     /// Arguments for Binding
+    #[serde(skip_deserializing)]
     arguments: Option<HashMap<String, String>>,
     /// Auto delete settings for the exchange
     auto_delete: bool,
@@ -22,7 +23,7 @@ pub(crate) struct Exchange {
     name: String,
     /// Type of the exchange
     r#type: String,
-    uer_who_performed_action: String,
+    user_who_performed_action: String,
     /// Vhost the exchange belongs to
     vhost: String,
 }
@@ -63,7 +64,7 @@ pub(crate) struct Exchange {
 /// `send_get`, to perform the actual HTTP request. Make sure these dependencies are properly set up in your project.
 pub(crate) async fn get_exchanges_for_vhost(vhost: &str) -> Result<Vec<String>, ServerError> {
     let root = &dotenv::var(RABBITMQ_MANAGEMENT_ROOT).expect("RABBITMQ_MANAGEMENT_ROOT not set.");
-    let url = prepare_url(&root, &format!("/api/exchanges/{}", vhost)).unwrap();
+    let url = prepare_url(&root, &format!("api/exchanges/{}", vhost)).unwrap();
     let exchanges_response: Result<Vec<Exchange>, ()> =
         send_get(&url, Some(&prepare_authorization_headers())).await;
 
