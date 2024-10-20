@@ -61,14 +61,14 @@ pub(crate) struct Exchange {
 /// # Notes
 /// This function relies on the `dotenv` crate to access the environment variable and on an external function,
 /// `send_get`, to perform the actual HTTP request. Make sure these dependencies are properly set up in your project.
-pub(crate) async fn get_exchanges_for_vhost(vhost: &str) -> Result<Vec<Exchange>, ServerError> {
+pub(crate) async fn get_exchanges_for_vhost(vhost: &str) -> Result<Vec<String>, ServerError> {
     let root = &dotenv::var(RABBITMQ_MANAGEMENT_ROOT).expect("RABBITMQ_MANAGEMENT_ROOT not set.");
     let url = prepare_url(&root, &format!("/api/exchanges/{}", vhost)).unwrap();
     let exchanges_response: Result<Vec<Exchange>, ()> =
         send_get(&url, Some(&prepare_authorization_headers())).await;
 
     match exchanges_response {
-        Ok(exchanges) => Ok(exchanges),
+        Ok(exchanges) => Ok(exchanges.iter().map(|e| e.name.clone()).collect()),
         Err(err) => Err(ServerError::new(format!("{:?}", err))),
     }
 }

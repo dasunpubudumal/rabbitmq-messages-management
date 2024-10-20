@@ -2,6 +2,7 @@ use std::collections::HashMap;
 
 use rocket::{fs::FileServer, serde::json::Json, Request};
 use routes::{
+    exchanges::exchanges,
     queues::{messages, queues},
     vhosts::vhosts,
 };
@@ -43,6 +44,11 @@ fn rocket() -> _ {
         .mount("/", FileServer::from("./static"))
         .mount("/queues", routes![queues, messages])
         .mount("/vhosts", routes![vhosts])
+        .mount("/exchanges", routes![exchanges])
         .register("/queues", catchers![internal_error, not_found, bad_request])
         .register("/vhosts", catchers![internal_error, not_found, bad_request])
+        .register(
+            "/exchanges",
+            catchers![internal_error, not_found, bad_request],
+        )
 }
